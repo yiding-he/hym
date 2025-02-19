@@ -1,0 +1,29 @@
+button {
+  background-color: var(--main-color);
+  color: white;
+  padding: 0.4em 1em 0.5em;
+  letter-spacing: 2px;
+  font-weight: bold;
+  border: 1px solid var(--main-color);
+  border-radius: 4px;
+  cursor: pointer;
+  position: relative;
+}
+
+button:hover, button:focus {
+  background-color: var(--main-color-light);
+  border-color: var(--main-color-light);
+  top: -1px;
+  box-shadow: 0 0 5px var(--main-color-shadow);
+}
+
+button:focus {
+  outline: unset;
+}
+
+button:active {
+  background-color: var(--main-color-light);
+  border-color: var(--main-color-light);
+  top: 0;
+  box-shadow: 0 0 5px var(--main-color-shadow);
+}

@@ -1,0 +1,46 @@
+@import "common/css/form.css";
+@import "common/css/button.css";
+
+:root {
+  font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
+  line-height: 1.5;
+  font-weight: 400;
+  font-size: 10pt;
+
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  --field-border: #bbbbbb;                /* 文本框边框色 */
+  --field-inset-shadow: #bbbbbb33;        /* 文本框阴影色 */
+  --field-inset-shadow-focus: #f7976677;  /* 文本框聚焦阴影色 */
+  --main-color: #da6720;
+  --main-color-light: #f79766;
+  --main-color-shadow: #f7976677;
+}
+
+body, #app {
+  margin: 0;
+  padding: 0;
+  display: flex;
+  place-items: center;
+  width: 100vw;
+  /* Edge 浏览器如果不留 2 个像素出来的话，会显示滚动条 */
+  height: calc(100vh - 2px);
+  box-sizing: border-box;
+}
+
+.spacer {
+  flex-grow: 1;
+}
+
+dialog {
+  outline: unset;
+  border: 1px solid var(--main-color);
+  border-radius: 4px;
+  display: flex;
+  flex-direction: column;
+  padding: 0;
+  box-shadow: 2px 2px 2px var(--field-inset-shadow);
+}
+
