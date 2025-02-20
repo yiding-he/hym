@@ -7,6 +7,9 @@ import org.springframework.security.core.userdetails.UserDetails;
 import java.util.Collection;
 import java.util.List;
 
+/**
+ * 对 Data Object 的封装
+ */
 public class HymUserDetail implements UserDetails {
 
     private final HymUser hymUser;

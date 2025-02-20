@@ -13,6 +13,12 @@ import org.springframework.stereotype.Service;
 
 import static java.util.concurrent.TimeUnit.MINUTES;
 
+/**
+ * 实现 Spring Security 的 UserDetailsService 接口，
+ * 用于从数据库中加载用户信息。这里使用了 Caffeine 缓存来提高性能。
+ * 当用户信息发生变化时，会触发 {@link #onUserUpdated(UserUpdated)} 方法，
+ * 从而清除对应的缓存。
+ */
 @Service
 public class HymUserDetailService implements UserDetailsService {
 

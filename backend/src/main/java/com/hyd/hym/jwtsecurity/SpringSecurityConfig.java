@@ -23,8 +23,11 @@ public class SpringSecurityConfig {
     return c.getAuthenticationManager();
   }
 
+  /**
+   * 定义全局的密码编码器
+   */
   @Bean
-  public BCryptPasswordEncoder passwordEncoder() {
+  public PasswordEncoder passwordEncoder() {
     return new BCryptPasswordEncoder();
   }
 

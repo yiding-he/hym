@@ -16,6 +16,9 @@ import java.util.Date;
 
 import static java.util.concurrent.TimeUnit.*;
 
+/**
+ * 对 JWT 相关功能的封装，一些功能会根据配置文件来配置。
+ */
 @Service
 public class JwtService {
 

@@ -3,3 +3,7 @@ root = true
 [*.{js,vue,css,html,ts,java}]
 indent_size = 2
 indent_style = space
+
+[*.properties]
+ij_properties_keep_blank_lines = true
+ij_properties_spaces_around_key_value_delimiter = true
