@@ -1,5 +1,6 @@
 package com.hyd.hym;
 
+import com.hyd.hym.constants.HymError;
 import lombok.Data;
 
 import java.util.HashMap;
@@ -32,6 +33,13 @@ public class Response {
         var response = new Response();
         response.setCode(FAIL);
         response.setMessage(message);
+        return response;
+    }
+
+    public static Response fail(HymError error) {
+        var response = new Response();
+        response.setCode(error.getCode());
+        response.setMessage(error.getMessage());
         return response;
     }
 
