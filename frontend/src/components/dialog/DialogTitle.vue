@@ -14,5 +14,7 @@
   display: flex;
   padding: 5px 10px;
   border-bottom: 1px solid var(--main-color-light);
+  background: var(--main-color);
+  color: white;
 }
 </style>

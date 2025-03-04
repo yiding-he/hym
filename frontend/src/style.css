@@ -11,12 +11,14 @@
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  --field-border: #bbbbbb;                /* 文本框边框色 */
-  --field-inset-shadow: #bbbbbb33;        /* 文本框阴影色 */
-  --field-inset-shadow-focus: #f7976677;  /* 文本框聚焦阴影色 */
-  --main-color: #da6720;
-  --main-color-light: #f79766;
-  --main-color-shadow: #f7976677;
+  --field-border: #e5e5e5;                /* 文本框边框色 */
+  --field-border-focus: #bfdff3;          /* 文本框聚焦边框色 */
+  --field-inset-shadow: #00000000;        /* 文本框阴影色 */
+  --field-inset-shadow-focus: #0872b522;  /* 文本框聚焦阴影色 */
+  --main-color: #0872b5;
+  --main-background-color: #f0f0f0;
+  --main-color-light: #4ca3da;
+  --main-color-shadow: #0872b577;
 }
 
 body, #app {

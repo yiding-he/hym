@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import AdminHeaderTitle from "./AdminHeaderTitle.vue";
 import {FontAwesomeIcon} from "@fortawesome/vue-fontawesome";
+import AdminHeaderTitle from "./AdminHeaderTitle.vue";
 import AdminHeaderUser from "./AdminHeaderUser.vue";
 </script>
 

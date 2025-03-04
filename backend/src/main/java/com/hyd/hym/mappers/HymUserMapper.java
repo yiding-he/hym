@@ -7,9 +7,9 @@ import org.apache.ibatis.annotations.Select;
 @Mapper
 public interface HymUserMapper {
 
-    @Select("""
-            SELECT id, username, password
-            FROM hym_user 
-            where username=#{username}""")
-    HymUser selectForUserLogin(String username);
+  @Select("""
+    SELECT hym_user_id, user_name, password
+    FROM t_hym_user
+    where user_name=#{username}""")
+  HymUser selectForUserLogin(String username);
 }

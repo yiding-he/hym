@@ -26,5 +26,6 @@ provide('labelAlign', props.labelAlign)
 .form {
   padding-top: 5px;
   padding-bottom: 10px;
+  background: var(--main-background-color);
 }
 </style>

@@ -1,7 +1,8 @@
 import {createApp} from 'vue';
 import App from './App.vue';
 import {FontAwesomeIcon} from "./common/FontAwesome.js";
-import {ApiClient} from "./common/ApiClient.js"; // 引入 mockSetup.js 以设置模拟后端
+import {ApiClient} from "./common/ApiClient.js";
+import {createPinia} from "pinia"; // 引入 mockSetup.js 以设置模拟后端
 
 ApiClient.setApiUrl(document
   .querySelector('meta[name="api-url"]')
@@ -9,4 +10,5 @@ ApiClient.setApiUrl(document
 
 const app = createApp(App);
 app.component('font-awesome-icon', FontAwesomeIcon);
+app.use(createPinia())
 app.mount('#app');

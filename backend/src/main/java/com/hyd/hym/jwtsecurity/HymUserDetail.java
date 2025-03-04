@@ -30,6 +30,6 @@ public class HymUserDetail implements UserDetails {
 
     @Override
     public String getUsername() {
-        return hymUser.getUsername();
+        return hymUser.getUserName();
     }
 }

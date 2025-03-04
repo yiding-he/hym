@@ -1,9 +1,11 @@
-<script setup>
-
+<script setup lang="ts">
 import {FontAwesomeIcon} from "@fortawesome/vue-fontawesome";
 import Dropdown from "../control/Dropdown.vue";
 import Menu from "../control/Menu.vue";
 import MenuItem from "../control/MenuItem.vue";
+import {contentNavigator} from "../../common/ContentNavigator";
+
+const navigator = contentNavigator();
 </script>
 
 <template>
@@ -16,10 +18,7 @@ import MenuItem from "../control/MenuItem.vue";
       </template>
       <template #content>
         <Menu>
-          <menu-item>个人资料</menu-item>
-          <menu-item>个人资料</menu-item>
-          <menu-item>个人资料</menu-item>
-          <menu-item>个人资料</menu-item>
+          <menu-item @click="navigator.navigateTo('UserInfoPage')">个人资料</menu-item>
           <menu-item>退出登录</menu-item>
         </Menu>
       </template>

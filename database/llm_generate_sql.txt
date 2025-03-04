@@ -1,0 +1,99 @@
+根据下面的表格描述，生成对应的 MySQL 建表 SQL 语句和对应的 Java Bean 代码。
+对 SQL 的要求如下：
+- SQL 只针对 MySQL 语法；
+- 对表的文字描述转换为 SQL 中对表的注释；
+- 对字段的文字描述转换为 SQL 中对字段的注释；
+- 对主键字段要加上注释 "comment '主键'"
+- 所有的表名和字段名都用 "`" 引用起来；
+- 所有的表名都以 "t_" 作为前缀；
+- 如果表格描述中存在 "id" 主键字段，则当生成 SQL 时，按照“表名去掉前缀再加上 "_id" 后缀”的规则重命名主键字段；
+- 所有主键字段类型都是 bigint
+- 每张表最后都要加上 `created_at` 和 `updated_at` 两个 datetime 类型的字段，其中创建时间字段默认为当前时间，修改时间字段会在记录更新时自动更新。
+对 JavaBean 代码要求如下：
+- 类名的生成规则为表名去掉前缀然后将下划线风格改为驼峰风格；
+- 这个类用 lombok 的 @Data 进行注解，并且不需要 getter/setter 方法；
+- 类中的属性与表字段一一对应，属性名的规则为将字段名的下划线风格改为驼峰风格，且第一个字母小写；
+- 属性类型不准用基本型别(primitive type)，而是必须用对象类型；
+- SQL 中的时间日期类型对应 Java 中的 LocalDateTime 类型。
+- 类上面要加上 Javadoc 注释，注释内容为表的文字描述。
+- 每个属性都要加上 Javadoc 注释，注释内容为字段的文字描述。
+
+下面是一个例子：
+
+---
+t_my_user 用户表
+  id pk
+  user_name 用户名 varchar(50) unique not null
+  password 加盐密码 varchar(100)
+---
+
+根据上面的表格描述，生成的 SQL 如下：
+
+```sql
+CREATE TABLE `t_my_user`
+(
+  `my_user_id`    bigint        primary key     comment '主键',
+  `user_name`     varchar(50)   unique not null comment '用户名',
+  `password`      varchar(100)                  comment '加盐密码',
+  `created_at`    datetime default current_timestamp() not null comment '创建时间',
+  `updated_at`    datetime default current_timestamp() not null on update current_timestamp() comment '修改时间'
+) comment '用户表';
+```
+
+生成的 Java 代码如下：
+
+```java
+import lombok.Data;
+import java.time.LocalDateTime;
+
+/**
+ * 用户表
+ */
+@Data
+public class MyUser {
+
+    /**
+     * 主键
+     */
+    private Long myUserId;
+
+    /**
+     * 用户名
+     */
+    private String userName;
+
+    /**
+     * 加盐密码
+     */
+    private String password;
+
+    /**
+     * 创建时间
+     */
+    private LocalDateTime createdAt;
+
+    /**
+     * 修改时间
+     */
+    private LocalDateTime updatedAt;
+}
+```
+
+好了，下面是正式的表格描述：
+
+
+
+---
+t_hym_user 用户表
+  id pk
+  user_name 用户名 varchar(50) unique not null
+  password 加盐密码 varchar(100)
+  mobile 手机号 varchar(20) unique
+  email 邮箱 varchar(50) unique
+  avatar 头像 varchar(255)
+  status 状态，1=正常，2=禁用 tinyint default 1
+  last_login_time 最后登录时间 datetime
+  last_login_ip 最后登录IP varchar(20)
+---
+
+

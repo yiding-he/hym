@@ -24,7 +24,9 @@ const toggleButtonText = computed(() => {
       <div class="toggle-button">
         <div class="toggle-button-content" @click="toggleSidebar">{{ toggleButtonText }}</div>
       </div>
-      <admin-content-pane class="admin-content-pane"></admin-content-pane>
+      <div class="admin-content-pane">
+        <admin-content-pane/>
+      </div>
     </div>
   </div>
 </template>
@@ -87,6 +89,12 @@ const toggleButtonText = computed(() => {
   flex-direction: row;
   flex: 1 1 auto;
   z-index: 999;
+}
+
+.admin-content-pane {
+  flex: 1 1 auto;
+  z-index: 998;
+  position: relative;
 }
 
 </style>

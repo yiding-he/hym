@@ -14,6 +14,7 @@ enum AppStatus {
 }
 
 // 定义本地属性
+// 其中 applicationName 初始化了一个默认值，然后在页面初始化过程中，会从服务端获取一个真实值
 const appStatus = ref(AppStatus.LOADING);
 const applicationName = ref('某某系统');
 provide('$applicationName', applicationName);
