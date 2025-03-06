@@ -3,11 +3,13 @@
 </script>
 
 <template>
-  <div>
+  <div class="menu">
     <slot/>
   </div>
 </template>
 
 <style scoped>
-
+  .menu {
+    background: var(--main-background-color);
+  }
 </style>

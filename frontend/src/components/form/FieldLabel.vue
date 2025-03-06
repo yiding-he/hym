@@ -1,19 +1,21 @@
 <script setup lang="ts">
-import {inject} from "vue";
+import {injectFormProperties} from './FormProperties';
 
-const labelWidth = inject('labelWidth')
-const labelAlign = inject('labelAlign')
-
-defineProps({
+const props = defineProps({
   label: {
     type: String,
-    default: ''
-  }
-})
+    default: '',
+  },
+});
+
+const { labelWidth, labelAlign } = injectFormProperties();
 </script>
 
 <template>
-  <label><span class="field-label" :style="{width: labelWidth, textAlign: labelAlign}">{{ label }}</span>
+  <label>
+    <span class="field-label" :style="{ width: labelWidth, textAlign: labelAlign }">
+      {{ props.label }}
+    </span>
     <slot></slot>
   </label>
 </template>
@@ -22,5 +24,6 @@ defineProps({
 span.field-label {
   display: inline-block;
   padding-right: 10px;
+  color: #505050;
 }
 </style>

@@ -1,34 +1,28 @@
 <script setup lang="ts">
-import {inject, ref} from "vue";
+import {ref} from "vue";
 import FieldLabel from "./FieldLabel.vue";
+import FieldDescription from "./FieldDescription.vue";
+import {exposeFieldFunctions, fieldProperties} from "./FieldProperties";
 
-defineProps({
-  label: {
-    type: String,
-    default: ''
-  },
-  maxLength: {
-    type: Number,
-    default: 0
-  }
-})
-
+const props = defineProps(fieldProperties)
+const input = ref<HTMLInputElement | null>(null);
 defineExpose({
   focus: () => {
-    input.value.focus();
+    input.value?.focus();
   }
 })
-
-const input = ref<HTMLInputElement | null>(null);
+exposeFieldFunctions(input.value)
 </script>
 
 <template>
   <div class="field field-single-line">
     <label>
-      <FieldLabel :label="label"><input
+      <FieldLabel :label="props.label??''"><input
         ref="input" type="text"
-        :maxlength="maxLength > 0? maxLength: ''"></FieldLabel>
+        :disabled="!!props.disabled"
+        :maxlength="props.maxLength??''"></FieldLabel>
     </label>
+    <FieldDescription v-if="props.description"></FieldDescription>
   </div>
 </template>
 

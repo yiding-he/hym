@@ -20,6 +20,6 @@
   padding-bottom: 10px;
 }
 .menu-item:hover {
-  background: #EEE;
+  background: var(--main-background-color-hover);
 }
 </style>

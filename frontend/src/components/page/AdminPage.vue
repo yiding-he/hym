@@ -95,6 +95,7 @@ const toggleButtonText = computed(() => {
   flex: 1 1 auto;
   z-index: 998;
   position: relative;
+  padding: 1em;
 }
 
 </style>
