@@ -49,12 +49,8 @@ public class SpringSecurityConfig {
       )
       .authenticationProvider(authenticationProvider)
       .authorizeHttpRequests(requests -> requests
-        .requestMatchers(
-          new AntPathRequestMatcher("/**/login"),
-          new AntPathRequestMatcher("/**/init-config"),
-          new AntPathRequestMatcher("/**/error")
-        ).permitAll()
-        .anyRequest().authenticated()
+        .requestMatchers(StaticResources.STATIC_RESOURCE_PATTERNS).permitAll()
+        .requestMatchers(new AntPathRequestMatcher("/api/**")).authenticated()
       );
 
     return http.build();

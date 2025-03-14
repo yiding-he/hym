@@ -1,13 +1,14 @@
 <script setup lang="ts">
-import {nextTick, onMounted, ref} from 'vue';
+import {inject, nextTick, onMounted, ref} from 'vue';
 import DialogTitle from "../dialog/DialogTitle.vue";
-import Form from "../form/Form.vue";
-import TextField from "../form/TextField.vue";
-import PasswordField from "../form/PasswordField.vue";
 import Button from "../control/Button.vue";
+import FormWrapper from "../form/FormWrapper.vue";
+import FieldWrapper from "../form/FieldWrapper.vue";
+import {AppConfig, DEFAULT_APP_CONFIG} from "../../common/AppConfig";
 
+const appConfig = inject<AppConfig>('$appConfig', DEFAULT_APP_CONFIG);
 const loginDialog = ref<HTMLDialogElement | null>(null);
-const usernameTextField = ref<InstanceType<typeof TextField> | null>(null); // Ref for the TextField component
+const usernameTextField = ref<InstanceType<typeof HTMLInputElement> | null>(null); // Ref for the TextField component
 const LoginDialog = {
   value: loginDialog.value,
   open: () => {
@@ -43,16 +44,22 @@ function onLoginButtonClick() {
 
 <template>
   <dialog ref="loginDialog">
-    <DialogTitle>登录</DialogTitle>
-    <Form label-width="60px" label-align="right">
-      <div class="form-body">
-        <TextField ref="usernameTextField" label="用户名 :"/>
-        <PasswordField label="密码 :"/>
-        <div class="form-buttons">
-          <Button @click="onLoginButtonClick">登录</Button>
+    <DialogTitle>登录{{appConfig.applicationName}}</DialogTitle>
+    <FormWrapper>
+      <form action="">
+        <div class="form-body">
+          <FieldWrapper label="用户名 :">
+            <input type="text" ref="usernameTextField" name="username"/>
+          </FieldWrapper>
+          <FieldWrapper label="密码 :">
+            <input type="password" name="password"/>
+          </FieldWrapper>
+          <div class="form-buttons">
+            <Button @click="onLoginButtonClick">登录</Button>
+          </div>
         </div>
-      </div>
-    </Form>
+      </form>
+    </FormWrapper>
   </dialog>
 </template>
 
@@ -63,7 +70,7 @@ function onLoginButtonClick() {
 
 .form-buttons {
   display: flex;
-  justify-content: flex-end;
+  justify-content: start;
   margin-top: 5px;
 }
 </style>

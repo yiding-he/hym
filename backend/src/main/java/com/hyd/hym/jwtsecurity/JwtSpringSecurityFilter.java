@@ -39,6 +39,13 @@ public class JwtSpringSecurityFilter extends OncePerRequestFilter {
     HttpServletRequest request, HttpServletResponse response, FilterChain filterChain
   ) throws ServletException, IOException {
 
+    // 如果是静态资源，直接放行
+    if (StaticResources.isStaticResourceRequest(request)) {
+      log.debug("请求是静态资源，放行 {}", request.getRequestURI());
+      filterChain.doFilter(request, response);
+      return;
+    }
+
     // 如果没有 Authorization 头，则放行
     var header = request.getHeader(hymConfig.getJwt().getAuthHeader());
     if (header == null) {

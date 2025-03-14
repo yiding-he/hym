@@ -31,10 +31,14 @@ const pageLoadingDialog = ref<HTMLDialogElement | null>(null);
 const PageLoadingDialog = {
   value: pageLoadingDialog.value,
   open: () => {
-    pageLoadingDialog.value.showModal();
+    if (pageLoadingDialog) {
+      pageLoadingDialog.value?.showModal();
+    }
   },
   close: () => {
-    pageLoadingDialog.value.close();
+    if (pageLoadingDialog) {
+      pageLoadingDialog.value?.close();
+    }
   }
 }
 
