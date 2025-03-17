@@ -89,13 +89,15 @@ const toggleButtonText = computed(() => {
   flex-direction: row;
   flex: 1 1 auto;
   z-index: 999;
+  overflow-y: scroll;
 }
 
 .admin-content-pane {
   flex: 1 1 auto;
-  z-index: 998;
+  z-index: 800;
   position: relative;
   padding: 1em;
+  box-sizing: content-box;
 }
 
 </style>

@@ -49,7 +49,7 @@ public class JwtSpringSecurityFilter extends OncePerRequestFilter {
     // 如果没有 Authorization 头，则放行
     var header = request.getHeader(hymConfig.getJwt().getAuthHeader());
     if (header == null) {
-      log.debug("请求头中没有 Authorization 头，放行");
+      log.debug("请求头中没有 Authorization 头，放行 {}", request.getRequestURI());
       filterChain.doFilter(request, response);
       return;
     }
@@ -57,7 +57,7 @@ public class JwtSpringSecurityFilter extends OncePerRequestFilter {
     // 如果 Authorization 头不是以 Bearer 开头，则放行
     var authType = hymConfig.getJwt().getAuthType();
     if (!header.startsWith(authType)) {
-      log.debug("Authorization 头不是以 {} 开头，放行", authType);
+      log.debug("Authorization 头不是以 {} 开头，放行 {}", authType, request.getRequestURI());
       filterChain.doFilter(request, response);
       return;
     }
@@ -66,16 +66,17 @@ public class JwtSpringSecurityFilter extends OncePerRequestFilter {
     var token = header.substring(authType.length()).trim();
     var claims = jwtService.parse(token);
     if (claims == null) {
-      log.debug("JWT 解析失败，放行");
+      log.debug("JWT 解析失败，放行 {}", request.getRequestURI());
       filterChain.doFilter(request, response);
       return;
     }
 
     // 验证用户是否存在
+    log.debug("正在验证用户 {}", claims.getSubject());
     var username = claims.getSubject();
     var userDetails = userDetailsService.loadUserByUsername(username);
     if (userDetails == null) {
-      log.debug("用户 {} 不存在，放行", username);
+      log.debug("用户 {} 不存在，放行 {}", username, request.getRequestURI());
       filterChain.doFilter(request, response);
       return;
     }

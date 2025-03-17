@@ -26,7 +26,7 @@ export enum UserStatus {
 }
 
 // 用户信息，会被多个组件侦听，并且会保存到 localStorage
-type User = {
+export type User = {
   userStatus: UserStatus;
   token: string;
 }

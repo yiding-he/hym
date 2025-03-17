@@ -84,6 +84,16 @@ public class MyUser {
 
 
 ---
+t_hym_function_cat 菜单功能分类表
+  id pk
+  category_name 分类名称 varchar(50) unique not null
+---
+t_hym_function 菜单功能表
+  id pk
+  function_name 功能名称 varchar(50) not null
+  page_name 页面名称 varchar(50) not null
+  category_id 功能类别ID bigint not null
+---
 t_hym_user 用户表
   id pk
   user_name 用户名 varchar(50) unique not null

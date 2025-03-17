@@ -21,3 +21,21 @@ CREATE TABLE `t_hym_user`
   `created_at`       datetime default current_timestamp() not null comment '创建时间',
   `updated_at`       datetime default current_timestamp() not null on update current_timestamp() comment '修改时间'
 ) comment '用户表';
+
+CREATE TABLE `t_hym_function_cat`
+(
+  `hym_function_cat_id` bigint        primary key     comment '主键',
+  `category_name`       varchar(50)   unique not null comment '分类名称',
+  `created_at`          datetime default current_timestamp() not null comment '创建时间',
+  `updated_at`          datetime default current_timestamp() not null on update current_timestamp() comment '修改时间'
+) comment '菜单功能分类表';
+
+CREATE TABLE `t_hym_function`
+(
+  `hym_function_id` bigint        primary key     comment '主键',
+  `function_name`   varchar(50)   not null        comment '功能名称',
+  `page_name`       varchar(50)   not null        comment '页面名称',
+  `category_id`     bigint        not null        comment '功能类别ID',
+  `created_at`      datetime default current_timestamp() not null comment '创建时间',
+  `updated_at`      datetime default current_timestamp() not null on update current_timestamp() comment '修改时间'
+) comment '菜单功能表';

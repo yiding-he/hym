@@ -11,6 +11,10 @@
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+
+  --text-color-main: #333333;
+  --text-color-light: #666666;
+
   --field-border: #e5e5e5;                /* 文本框边框色 */
   --field-border-focus: #bfdff3;          /* 文本框聚焦边框色 */
   --field-inset-shadow: #00000000;        /* 文本框阴影色 */
@@ -18,6 +22,7 @@
   --main-color: #0872b5;
   --main-background-color: #ffffff;
   --main-background-color-hover: #eeeeee;
+  --main-background-color-active: #dddddd;
   --main-color-light: #4ca3da;
   --main-color-shadow: #0872b577;
 }

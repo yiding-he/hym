@@ -1,5 +1,7 @@
 import axios, {AxiosResponse} from 'axios';
 import {AppConfig} from "./AppConfig";
+import {User, UserStatus, useUserStore} from "./UserStore";
+import {Store} from 'pinia';
 
 const apiClient = axios.create();
 const ApiClient = {
@@ -10,13 +12,23 @@ const ApiClient = {
   },
 }
 
+let userStore: Store<"user", User> | null = null;
+
 // 拦截请求路径，添加前缀
 apiClient.interceptors.request.use(
   config => {
+    const originalUrl = config.url;
     if (config.url?.startsWith("/")) {
       config.url = ApiClient.apiUrl + config.url;
     }
-    console.log("Requesting URL: " + config.url)
+    if (userStore == null) {
+      userStore = useUserStore();
+    }
+    const token = userStore.token;
+    if (token) {
+      config.headers.Authorization = `Bearer ${token}`;
+    }
+    console.log(`请求 ${originalUrl} 带上鉴权 '${token}'`)
     return config;
   },
   error => {
@@ -39,6 +51,18 @@ apiClient.interceptors.response.use(
 );
 
 export {ApiClient, apiClient};
+
+//////////////////////////////
+
+type FunctionCategory = {
+  title: string,
+  functions: Function[],
+}
+
+type Function = {
+  title: string,
+  pageName: string,
+}
 
 //////////////////////////////
 
@@ -85,5 +109,12 @@ export const ApiList = {
     { token: string }
   >("/login", "POST"),
 
+  // 获取功能菜单
+  GetFunctions: new ApiType<
+    {},
+    {
+      functions: FunctionCategory[],
+    }
+  >("/functions", "GET"),
 }
 

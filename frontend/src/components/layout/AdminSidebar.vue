@@ -1,23 +1,25 @@
 <script setup lang="ts">
+import NavigationBlock from "../control/NavigationBlock.vue";
 import {ref} from "vue";
-import {FontAwesomeIcon} from "@fortawesome/vue-fontawesome";
+import NavigationItem from "../control/NavigationItem.vue";
+import {ApiList} from "../../common/ApiClient";
 
-const items = ref([])
-for (let i = 0; i < 100; i++) {
-  items.value.push({
-    id: i,
-    name: "item " + i,
-  })
-}
+const functions = ref([])
+ApiList.GetFunctions.call({}).then(resp => {
+  functions.value = resp.functions;
+})
+
 </script>
 
 <template>
   <div class="sidebar">
-    <div class="sidebar-content">
-      <div class="item" v-for="item in items" :key="item.id">
-        <font-awesome-icon :icon="['fas', 'user']"/>
-        {{ item.name }}
-      </div>
+    <div class="navigation-block" v-for="category in functions" :key="category.title">
+      <NavigationBlock :title="category.title">
+        <NavigationItem v-for="item in category.functions"
+                        :key="item.title" :title="item.title"
+                        :page-name="item.pageName"></NavigationItem>
+      </NavigationBlock>
+      <div class="separator"></div>
     </div>
   </div>
 </template>
@@ -30,13 +32,20 @@ for (let i = 0; i < 100; i++) {
   white-space: nowrap;
   overflow-x: hidden;
   text-overflow: ellipsis;
+  padding-top: 10px;
+  box-sizing: content-box;
 }
 
-.sidebar-content {
-  padding: 12px 0 12px 12px;
+.navigation-block {
 }
 
-.item {
-  padding: 10px;
+.separator {
+  margin: 10px;
+  border-bottom: 1px solid #ccc;
 }
+
+.navigation-block:last-child .separator {
+  display: none;
+}
+
 </style>

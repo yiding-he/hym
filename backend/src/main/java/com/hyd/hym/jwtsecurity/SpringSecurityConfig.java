@@ -12,6 +12,7 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
 @Configuration
@@ -35,7 +36,8 @@ public class SpringSecurityConfig {
   public SecurityFilterChain securityFilterChain(
     HttpSecurity http,
     HymUserDetailService hymUserDetailService,
-    PasswordEncoder passwordEncoder
+    PasswordEncoder passwordEncoder,
+    JwtSpringSecurityFilter jwtFilter
   ) throws Exception {
 
     var authenticationProvider = new DaoAuthenticationProvider();
@@ -51,7 +53,8 @@ public class SpringSecurityConfig {
       .authorizeHttpRequests(requests -> requests
         .requestMatchers(StaticResources.STATIC_RESOURCE_PATTERNS).permitAll()
         .requestMatchers(new AntPathRequestMatcher("/api/**")).authenticated()
-      );
+      )
+      .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
 
     return http.build();
   }
