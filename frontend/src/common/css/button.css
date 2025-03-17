@@ -10,7 +10,7 @@ button {
   position: relative;
 }
 
-button:hover, button:focus {
+button:hover {
   background-color: var(--main-color-light);
   border-color: var(--main-color-light);
   top: -1px;

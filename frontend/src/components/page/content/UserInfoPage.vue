@@ -1,17 +1,31 @@
 <script setup lang="ts">
 
-import Form from "../../form/Form.vue";
-import TextField from "../../form/TextField.vue";
 import TitledPane from "../../container/TitledPane.vue";
+import FormWrapper from "../../form/FormWrapper.vue";
+import FieldWrapper from "../../form/FieldWrapper.vue";
+import {ref} from "vue";
+
+const username = ref('');
+const createdAt = ref('');
+const lastLogin = ref('');
+
 </script>
 
 <template>
   <TitledPane title="用户信息">
-    <Form label-width="85px" label-align="left">
-      <TextField :disabled="true" label="用户名:"/>
-      <TextField :disabled="true" label="创建时间:"/>
-      <TextField :disabled="true" label="上次登录:"/>
-    </Form>
+    <FormWrapper>
+      <form action="">
+        <FieldWrapper label="用户名:" label-width="85px">
+          <input type="text" disabled name="username" v-model="username">
+        </FieldWrapper>
+        <FieldWrapper label="创建时间:" label-width="85px">
+          <input type="text" disabled name="createdAt" v-model="createdAt">
+        </FieldWrapper>
+        <FieldWrapper label="上次登录:" label-width="85px">
+          <input type="text" disabled name="lastLogin" v-model="lastLogin">
+        </FieldWrapper>
+      </form>
+    </FormWrapper>
   </TitledPane>
 </template>
 

@@ -1,11 +1,12 @@
 <script setup lang="ts">
 import './style.css'
-import {provide, ref} from 'vue';
-import {apiClient} from './common/ApiClient';
+import {provide, ref, watch} from 'vue';
+import {apiClient, ApiList} from './common/ApiClient';
 import PageLoading from "./components/overlay/PageLoading.vue";
 import AdminPage from "./components/page/AdminPage.vue";
 import LoginPage from "./components/page/LoginPage.vue";
 import {AppConfig} from "./common/AppConfig";
+import {createUserStoreSyncToLocalStorage, UserStatus, useUserStore} from "./common/UserStore";
 
 // 定义枚举
 enum AppStatus {
@@ -21,19 +22,27 @@ const appConfig = ref<AppConfig>({applicationName: '某某系统'});
 provide('$appConfig', appConfig);
 
 // 页面初始化过程
-const loadInitConfig = () => apiClient.get('/init-config');
-const onInitSuccess = (response: any) => {
-  appConfig.value = response.data
+const loadInitConfig = () => ApiList.InitConfig.call({});
+const onInitSuccess = (response: AppConfig) => {
+  appConfig.value = response
   appStatus.value = AppStatus.LOGGED_OUT;
 };
 const onInitError = (error: any) => {
   console.error('Failed to load init config: ', error);
 };
 
-// 登录成功后的处理
-const onLoginSuccess = () => {
-  appStatus.value = AppStatus.LOGGED_IN;
-};
+// userStore 是使用 pinia 框架创建出来的
+createUserStoreSyncToLocalStorage();
+const userStore = useUserStore();
+userStore.$subscribe((mutation, state) => {
+  console.log("User store changed: ", state.userStatus);
+  const newStatus = state.userStatus;
+  if (newStatus == UserStatus.LOGGED_IN) {
+    appStatus.value = AppStatus.LOGGED_IN;
+  } else {
+    appStatus.value = AppStatus.LOGGED_OUT;
+  }
+})
 
 </script>
 
@@ -42,7 +51,7 @@ const onLoginSuccess = () => {
                :background-task="loadInitConfig"
                @success="onInitSuccess"
                @error="onInitError"/>
-  <login-page v-if="appStatus == AppStatus.LOGGED_OUT" @login-success="onLoginSuccess"/>
+  <login-page v-if="appStatus == AppStatus.LOGGED_OUT"/>
   <admin-page v-if="appStatus == AppStatus.LOGGED_IN"/>
 </template>
 

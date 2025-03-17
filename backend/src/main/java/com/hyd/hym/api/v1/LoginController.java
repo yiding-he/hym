@@ -6,6 +6,7 @@ import com.hyd.hym.constants.HymError;
 import com.hyd.hym.jwtsecurity.JwtLoginService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -20,7 +21,7 @@ public class LoginController extends WebApiV1Controller {
     }
 
     @RequestMapping("/login")
-    public Response login(LoginRequest request) {
+    public Response login(@RequestBody LoginRequest request) {
         var token = jwtLoginService.login(request.username(), request.password());
         if (token == null) {
             return Response.fail(HymError.UserLogin.InvalidPassword);

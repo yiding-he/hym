@@ -16,7 +16,8 @@ public class StaticResources {
     new AntPathRequestMatcher("/**/*.png"),
     new AntPathRequestMatcher("/**/*.jpeg"),
     new AntPathRequestMatcher("/**/*.svg"),
-    new AntPathRequestMatcher("/api/**/init-config"),  // 这个用于首页打开时获取基本信息
+    new AntPathRequestMatcher("/api/**/init-config"),   // 这个用于首页打开时获取基本信息
+    new AntPathRequestMatcher("/api/**/login"),         // 这个用于登录
   };
 
   public static boolean isStaticResourceRequest(HttpServletRequest request) {

@@ -5,10 +5,11 @@ import Button from "../control/Button.vue";
 import FormWrapper from "../form/FormWrapper.vue";
 import FieldWrapper from "../form/FieldWrapper.vue";
 import {AppConfig, DEFAULT_APP_CONFIG} from "../../common/AppConfig";
+import {ApiList} from "../../common/ApiClient";
+import {UserStatus, useUserStore} from "../../common/UserStore";
 
 const appConfig = inject<AppConfig>('$appConfig', DEFAULT_APP_CONFIG);
 const loginDialog = ref<HTMLDialogElement | null>(null);
-const usernameTextField = ref<InstanceType<typeof HTMLInputElement> | null>(null); // Ref for the TextField component
 const LoginDialog = {
   value: loginDialog.value,
   open: () => {
@@ -28,34 +29,57 @@ const LoginDialog = {
   }
 }
 
-const emit = defineEmits({
-  loginSuccess: () => true,
-})
+const usernameTextField = ref<InstanceType<typeof HTMLInputElement> | null>(null);
+const username = ref<string>('');
+const password = ref<string>('');
+const errorMessage = ref<string | null>(null);
+
+const userStore = useUserStore();
 
 onMounted(async () => {
   LoginDialog.open();
+  username.value = "admin";
+  password.value = "admin123";
 })
 
-function onLoginButtonClick() {
-  LoginDialog.close();
-  emit('loginSuccess');
+function onLoginButtonClick(event: Event) {
+  event.preventDefault();
+
+  if (!username.value || !password.value) {
+    errorMessage.value = '用户名和密码不能为空';
+    return;
+  }
+
+  ApiList.Login.call({
+    username: username.value,
+    password: password.value,
+  }).then(response => {
+    const token = response.token;
+    userStore.setToken(token);
+    userStore.setUserStatus(UserStatus.LOGGED_IN)
+    LoginDialog.close();
+  }).catch(error => {
+    errorMessage.value = error.message;
+  })
+
 }
 </script>
 
 <template>
   <dialog ref="loginDialog">
-    <DialogTitle>登录{{appConfig.applicationName}}</DialogTitle>
+    <DialogTitle>登录{{ appConfig.applicationName }}</DialogTitle>
     <FormWrapper>
-      <form action="">
+      <form action="" @submit="onLoginButtonClick">
         <div class="form-body">
           <FieldWrapper label="用户名 :">
-            <input type="text" ref="usernameTextField" name="username"/>
+            <input type="text" ref="usernameTextField" name="username" v-model="username"/>
           </FieldWrapper>
           <FieldWrapper label="密码 :">
-            <input type="password" name="password"/>
+            <input type="password" name="password" v-model="password"/>
           </FieldWrapper>
+          <div class="error-message" v-if="errorMessage">{{ errorMessage }}</div>
           <div class="form-buttons">
-            <Button @click="onLoginButtonClick">登录</Button>
+            <Button>登录</Button>
           </div>
         </div>
       </form>
@@ -71,6 +95,11 @@ function onLoginButtonClick() {
 .form-buttons {
   display: flex;
   justify-content: start;
+  margin-top: 5px;
+}
+
+.error-message {
+  color: red;
   margin-top: 5px;
 }
 </style>

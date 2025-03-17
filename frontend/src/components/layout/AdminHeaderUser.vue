@@ -4,8 +4,15 @@ import Dropdown from "../control/Dropdown.vue";
 import Menu from "../control/Menu.vue";
 import MenuItem from "../control/MenuItem.vue";
 import {contentNavigator} from "../../common/ContentNavigator";
+import {UserStatus, useUserStore} from "../../common/UserStore";
 
 const navigator = contentNavigator();
+const userStore = useUserStore();
+const userLogout = () => {
+  userStore.setUserStatus(UserStatus.LOGGED_OUT);
+}
+
+
 </script>
 
 <template>
@@ -19,7 +26,7 @@ const navigator = contentNavigator();
       <template #content>
         <Menu>
           <menu-item @click="navigator.navigateTo('UserInfoPage')">个人资料</menu-item>
-          <menu-item>退出登录</menu-item>
+          <menu-item @click="userLogout()">退出登录</menu-item>
         </Menu>
       </template>
     </dropdown>

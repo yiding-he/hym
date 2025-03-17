@@ -2,6 +2,7 @@ package com.hyd.hym.jwtsecurity;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.core.AuthenticationException;
 import org.springframework.stereotype.Service;
 
 import static org.springframework.security.authentication.UsernamePasswordAuthenticationToken.unauthenticated;
@@ -24,7 +25,11 @@ public class JwtLoginService {
    */
   public JwtToken login(String username, String password) {
     var unauthenticated = unauthenticated(username, password);
-    var authenticate = authenticationManager.authenticate(unauthenticated);
-    return authenticate.isAuthenticated() ? jwtService.generate(username) : null;
+    try {
+      var authenticate = authenticationManager.authenticate(unauthenticated);
+      return authenticate.isAuthenticated() ? jwtService.generate(username) : null;
+    } catch (AuthenticationException e) {
+      return null;
+    }
   }
 }
