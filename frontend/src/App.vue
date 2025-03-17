@@ -21,16 +21,6 @@ const appStatus = ref(AppStatus.LOADING);
 const appConfig = ref<AppConfig>({applicationName: '某某系统'});
 provide('$appConfig', appConfig);
 
-// 页面初始化过程
-const loadInitConfig = () => ApiList.InitConfig.call({});
-const onInitSuccess = (response: AppConfig) => {
-  appConfig.value = response
-  appStatus.value = AppStatus.LOGGED_OUT;
-};
-const onInitError = (error: any) => {
-  console.error('Failed to load init config: ', error);
-};
-
 // userStore 是使用 pinia 框架创建出来的
 createUserStoreSyncToLocalStorage();
 const userStore = useUserStore();
@@ -43,6 +33,16 @@ userStore.$subscribe((mutation, state) => {
     appStatus.value = AppStatus.LOGGED_OUT;
   }
 })
+
+// 页面初始化过程
+const loadInitConfig = () => ApiList.InitConfig.call({});
+const onInitSuccess = (response: AppConfig) => {
+  appConfig.value = response
+  appStatus.value = userStore.userStatus == UserStatus.LOGGED_IN ? AppStatus.LOGGED_IN : AppStatus.LOGGED_OUT;
+};
+const onInitError = (error: any) => {
+  console.error('Failed to load init config: ', error);
+};
 
 </script>
 

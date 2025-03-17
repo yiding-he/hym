@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import {computed, ref} from 'vue';
+import {computed, nextTick, ref} from 'vue';
 
 // 使用 ref 来追踪下拉框的显示状态
 const isOpen = ref(false);
@@ -9,7 +9,7 @@ const props = defineProps({
   triggerMethod: {
     type: String,
     default: 'MOUSE_ENTER',
-    validator: (value) => ['MOUSE_ENTER', 'CLICK'].includes(value)
+    validator: (value: string) => ['MOUSE_ENTER', 'CLICK'].includes(value)
   },
   autoHide: {
     type: Boolean,
@@ -28,8 +28,10 @@ const toggleDropdown = () => {
 const closeDropdown = () => {
   isOpen.value = false;
 }
-const openDropdown = () => {
+const openDropdown = async () => {
   isOpen.value = true;
+  // 要等待 isOpen 相关事件处理完毕后再调整元素位置
+  await nextTick();
   updateContentPosition();
 }
 
@@ -83,7 +85,7 @@ const onContentMouseClick = () => {
 }
 
 const _contentVisibility = computed(() => {
-  return isOpen.value ? 'visible' : 'hidden';
+  return isOpen.value ? 'block' : 'none';
 })
 
 </script>
@@ -101,7 +103,7 @@ const _contentVisibility = computed(() => {
        @mouseenter="onContentMouseEnter"
        @mouseleave="onContentMouseLeave"
        @click="onContentMouseClick"
-       :style="{ visibility: _contentVisibility }">
+       :style="{ display: _contentVisibility }">
     <slot name="content"></slot>
   </div>
 </template>
@@ -109,7 +111,7 @@ const _contentVisibility = computed(() => {
 <style scoped>
 .content-wrapper {
   position: absolute;
-  visibility: hidden;
+  display: none;
   border: 1px solid #DDD;
   min-width: 100px;
   width: auto;
