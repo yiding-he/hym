@@ -4,7 +4,7 @@ type EventHandler = (...payload: any[]) => void;
 
 // 扫描并注册 components/page 目录下所有的 *Page.vue 文件
 // @ts-ignore
-const pageFiles = import.meta.glob('../components/page/content/*Page.vue');
+const pageFiles = import.meta.glob('../components/page/content/**/*Page.vue');
 const pageRegistry: Record<string, () => Promise<any>> = {
 };
 const pageCache: Record<string, any> = {};
@@ -69,9 +69,17 @@ export const contentNavigator = defineStore('contentPaneHolder', {
         }
       }
     },
+    // 根据地址栏当中"#"到"?"之间的部分作为页面名字来加载
     updatePageByHash() {
-      const hash = window.location.hash;
-      const pageName = (hash? hash.substring(1): "") || "DashboardPage";
+      const hash = window.location.hash.trim();
+      if (!hash || hash === '#') {
+        this.navigateTo("DashboardPage")
+        return;
+      }
+      let pageName = hash.substring(1);
+      if (pageName.includes("?")) {
+        pageName = pageName.substring(0, pageName.indexOf("?"))
+      }
       this.navigateTo(pageName)
     },
     init() {

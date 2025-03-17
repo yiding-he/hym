@@ -19,16 +19,16 @@ public class FunctionsController extends WebApiV1Controller {
   @Autowired
   private HymFunctionMapper hymFunctionMapper;
 
-  record Function(Long id, String title, String pageName) {
-  }
-
-  record Category(Long id, String title, List<Function> functions) {
-  }
-
   @GetMapping("/functions")
   public Response getFunctions() {
     var categories = hymFunctionCatMapper.selectAll();
     var functions = hymFunctionMapper.selectAll();
+
+    record Function(Long id, String title, String pageName) {
+    }
+
+    record Category(Long id, String title, List<Function> functions) {
+    }
 
     return Response.success().addData("functions",
       categories.stream()
