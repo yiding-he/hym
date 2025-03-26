@@ -1,6 +1,7 @@
 package com.hyd.hym.models;
 
 import lombok.Data;
+
 import java.time.LocalDateTime;
 
 /**
@@ -9,58 +10,61 @@ import java.time.LocalDateTime;
 @Data
 public class HymUser {
 
-    /**
-     * 主键
-     */
-    private Long hymUserId;
+  public static final int STATUS_NORMAL = 1;
+  public static final int STATUS_DISABLED = 2;
 
-    /**
-     * 用户名
-     */
-    private String userName;
+  /**
+   * 主键
+   */
+  private Long hymUserId;
 
-    /**
-     * 加盐密码
-     */
-    private String password;
+  /**
+   * 用户名
+   */
+  private String userName;
 
-    /**
-     * 手机号
-     */
-    private String mobile;
+  /**
+   * 加盐密码
+   */
+  private String password;
 
-    /**
-     * 邮箱
-     */
-    private String email;
+  /**
+   * 手机号
+   */
+  private String mobile;
 
-    /**
-     * 头像
-     */
-    private String avatar;
+  /**
+   * 邮箱
+   */
+  private String email;
 
-    /**
-     * 状态，1=正常，2=禁用
-     */
-    private Integer status;
+  /**
+   * 头像
+   */
+  private String avatar;
 
-    /**
-     * 最后登录时间
-     */
-    private LocalDateTime lastLoginTime;
+  /**
+   * 状态，1=正常，2=禁用
+   */
+  private Integer status;
 
-    /**
-     * 最后登录IP
-     */
-    private String lastLoginIp;
+  /**
+   * 最后登录时间
+   */
+  private LocalDateTime lastLoginTime;
 
-    /**
-     * 创建时间
-     */
-    private LocalDateTime createdAt;
+  /**
+   * 最后登录IP
+   */
+  private String lastLoginIp;
 
-    /**
-     * 修改时间
-     */
-    private LocalDateTime updatedAt;
+  /**
+   * 创建时间
+   */
+  private LocalDateTime createdAt;
+
+  /**
+   * 修改时间
+   */
+  private LocalDateTime updatedAt;
 }

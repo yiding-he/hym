@@ -33,6 +33,7 @@ public class JwtService {
 
   @PostConstruct
   private void init() {
+    // 加载相关配置，初始化 JwtParser 以及缓存
     this.secretKey = Keys.hmacShaKeyFor(hymConfig.getJwt().getSecret().getBytes());
     this.jwtParser = Jwts.parser().verifyWith(secretKey).build();
     this.claimsCache = Caffeine.newBuilder()

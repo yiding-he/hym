@@ -10,6 +10,6 @@ public class InitController extends WebApiV1Controller {
 
     @RequestMapping("/init-config")
     public Response initConfig() {
-        return Response.success().addData("applicationName", "某某系统");
+        return Response.ok().addData("applicationName", "某某系统");
     }
 }

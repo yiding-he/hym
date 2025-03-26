@@ -21,8 +21,8 @@ public class FunctionsController extends WebApiV1Controller {
 
   @GetMapping("/functions")
   public Response getFunctions() {
-    var categories = hymFunctionCatMapper.selectAll();
     var functions = hymFunctionMapper.selectAll();
+    var categories = hymFunctionCatMapper.selectAll();
 
     record Function(Long id, String title, String pageName) {
     }
@@ -30,7 +30,7 @@ public class FunctionsController extends WebApiV1Controller {
     record Category(Long id, String title, List<Function> functions) {
     }
 
-    return Response.success().addData("functions",
+    return Response.ok().addData("functions",
       categories.stream()
         .map(category -> new Category(
           category.getHymFunctionCatId(),

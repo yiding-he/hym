@@ -1,16 +1,19 @@
 package com.hyd.hym.mappers;
 
+import com.hyd.hym.database.BaseProvider;
+import com.hyd.hym.database.Conditions;
+import com.hyd.hym.events.UserEvents;
 import com.hyd.hym.models.HymUser;
-import org.apache.ibatis.annotations.Mapper;
-import org.apache.ibatis.annotations.Param;
-import org.apache.ibatis.annotations.Select;
-import org.apache.ibatis.annotations.Update;
+import org.apache.ibatis.annotations.*;
+import org.springframework.context.event.EventListener;
+
+import java.util.List;
 
 @Mapper
 public interface HymUserMapper {
 
   @Select("""
-    SELECT hym_user_id, user_name, password
+    SELECT hym_user_id, user_name, password, status
     FROM t_hym_user
     where user_name=#{username}""")
   HymUser selectForUserLogin(String username);
@@ -22,6 +25,17 @@ public interface HymUserMapper {
     WHERE user_name = #{username}""")
   void updateLastLoginTime(
     @Param("username") String username,
-    @Param("lastLoginIp")  String lastLoginIp
+    @Param("lastLoginIp") String lastLoginIp
   );
+
+  @SelectProvider(type = ListUserProvider.class, method = "toSql")
+  List<HymUser> listUser(Conditions conditions);
+
+  class ListUserProvider extends BaseProvider {
+
+    @Override
+    protected String getSqlStart(Conditions conditions) {
+      return "select * from t_hym_user";
+    }
+  }
 }

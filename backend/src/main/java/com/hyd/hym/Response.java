@@ -9,52 +9,73 @@ import java.util.Map;
 @Data
 public class Response {
 
-    public static final int SUCCESS = 0;
+  public static final int SUCCESS = 0;
 
-    public static final int FAIL = -1;
+  public static final int FAIL = -1;
 
-    public static Response success() {
-        return new Response();
-    }
+  public static Response ok() {
+    return new Response();
+  }
 
-    public static Response success(String message) {
-        var response = new Response();
-        response.setMessage(message);
-        return response;
-    }
+  public static Response ok(String message) {
+    var response = new Response();
+    response.setMessage(message);
+    return response;
+  }
 
-    public static Response fail() {
-        var response = new Response();
-        response.setCode(FAIL);
-        return response;
-    }
+  public static Response ok(Result<?> result, String key) {
+    return ok().addData(key, result.getData());
+  }
 
-    public static Response fail(String message) {
-        var response = new Response();
-        response.setCode(FAIL);
-        response.setMessage(message);
-        return response;
-    }
+  public static Response error() {
+    var response = new Response();
+    response.setCode(FAIL);
+    return response;
+  }
 
-    public static Response fail(HymError error) {
-        var response = new Response();
-        response.setCode(error.getCode());
-        response.setMessage(error.getMessage());
-        return response;
-    }
+  public static Response error(String message) {
+    return error(FAIL, message);
+  }
 
-    private int code;
+  public static Response error(int code, String message) {
+    var response = new Response();
+    response.setCode(code);
+    response.setMessage(message);
+    return response;
+  }
 
-    private String message;
+  public static Response error(HymError error) {
+    var response = new Response();
+    response.setCode(error.getCode());
+    response.setMessage(error.getMessage());
+    return response;
+  }
 
-    private Map<String, Object> data = new HashMap<>();
+  public static Response error(Result<?> result) {
+    return error(result.getError().getCode(), result.getError().getMessage());
+  }
 
-    public boolean isSuccess() {
-        return code == SUCCESS;
-    }
+  private int code;
 
-    public Response addData(String key, Object value) {
-        data.put(key, value);
-        return this;
-    }
+  private String message;
+
+  private Map<String, Object> data = new HashMap<>();
+
+  public boolean isOk() {
+    return code == SUCCESS;
+  }
+
+  public Response addData(String key, Object value) {
+    data.put(key, value);
+    return this;
+  }
+
+  @SuppressWarnings("unchecked")
+  public <T> T getData(String key) {
+    return (T) data.get(key);
+  }
+
+  public <T> T getData(String key, Class<T> type) {
+    return type.cast(data.get(key));
+  }
 }

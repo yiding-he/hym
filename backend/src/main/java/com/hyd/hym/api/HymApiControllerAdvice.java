@@ -28,7 +28,7 @@ public class HymApiControllerAdvice {
       return null;
     } else {
       log.error("发生未捕获的异常[{}]", request.getRequestURI(), ex);
-      return Response.fail(ex.getMessage());
+      return Response.error(ex.getMessage());
     }
   }
 }
