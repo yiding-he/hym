@@ -1,41 +1,45 @@
 package com.hyd.hym.models;
-
 import lombok.Data;
 import java.time.LocalDateTime;
 
 /**
- * 菜单功能表
+ * 功能表
  */
 @Data
 public class HymFunction {
 
-    /**
-     * 主键
-     */
-    private Long hymFunctionId;
+  /**
+   * 主键
+   */
+  private Long hymFunctionId;
 
-    /**
-     * 功能名称
-     */
-    private String functionName;
+  /**
+   * 功能名称
+   */
+  private String functionName;
 
-    /**
-     * 页面名称
-     */
-    private String pageName;
+  /**
+   * 功能代码
+   */
+  private String functionCode;
 
-    /**
-     * 功能类别ID
-     */
-    private Long categoryId;
+  /**
+   * 页面名称
+   */
+  private String pageName;
 
-    /**
-     * 创建时间
-     */
-    private LocalDateTime createdAt;
+  /**
+   * 功能类别ID
+   */
+  private Long categoryId;
 
-    /**
-     * 修改时间
-     */
-    private LocalDateTime updatedAt;
+  /**
+   * 创建时间
+   */
+  private LocalDateTime createdAt;
+
+  /**
+   * 修改时间
+   */
+  private LocalDateTime updatedAt;
 }

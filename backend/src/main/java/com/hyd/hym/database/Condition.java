@@ -40,6 +40,10 @@ public class Condition {
     return condition;
   }
 
+  public static Condition of(String propName, Operator operator, Object... values) {
+    return of(propName, operator, List.of(values));
+  }
+
   /**
    * 解析 lambda 表达式，得到原始的 JavaBean 类名和属性名并注入到 Condition 对象
    */

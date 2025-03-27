@@ -12,7 +12,7 @@ class LoginControllerTest extends HymApplicationTest {
   @Test
   void login() {
     var request = new LoginController.LoginRequest("admin", "admin123");
-    var response = restTemplate.postForEntity("http://localhost:8080/api/v1/login", request, Response.class);
-    System.out.println(response.getBody());
+    var response = callApiPost("/login", request);
+    System.out.println(response);
   }
 }

@@ -62,6 +62,10 @@ public class HymError {
     return HymException.create(this);
   }
 
+  public HymException toException(Throwable cause) {
+    return this.withCause(cause).toException();
+  }
+
   public String getMessage() {
     var msg = this.message;
     for (String key : context.keySet()) {
@@ -99,5 +103,6 @@ public class HymError {
     HymError ParseBeanMethodError = new HymError(2000, "解析 Bean 方法出错");
     HymError ParseQueryOperatorError = new HymError(2001, "解析查询操作符出错: {operator}");
     HymError NullObjectError = new HymError(2002, "{} 不能为空");
+    HymError NetworkError = new HymError(2003, "网络错误");
   }
 }

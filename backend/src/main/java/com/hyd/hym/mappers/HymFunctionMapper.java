@@ -16,7 +16,7 @@ public interface HymFunctionMapper {
      */
     @Select("""
             SELECT
-              `hym_function_id`, `function_name`, `page_name`,
+              `hym_function_id`, `function_name`, `function_code`, `page_name`,
               `category_id`, `created_at`, `updated_at`
             FROM `t_hym_function`
             """)

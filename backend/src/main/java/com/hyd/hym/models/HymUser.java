@@ -1,7 +1,5 @@
 package com.hyd.hym.models;
-
 import lombok.Data;
-
 import java.time.LocalDateTime;
 
 /**
@@ -47,6 +45,11 @@ public class HymUser {
    * 状态，1=正常，2=禁用
    */
   private Integer status;
+
+  /**
+   * 角色名
+   */
+  private String roleName;
 
   /**
    * 最后登录时间

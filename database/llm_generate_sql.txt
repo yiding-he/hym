@@ -1,4 +1,5 @@
 根据下面的表格描述，生成对应的 MySQL 建表 SQL 语句和对应的 Java Bean 代码。
+
 对 SQL 的要求如下：
 - SQL 只针对 MySQL 语法；
 - 对表的文字描述转换为 SQL 中对表的注释；
@@ -6,14 +7,19 @@
 - 对主键字段要加上注释 "comment '主键'"
 - 所有的表名和字段名都用 "`" 引用起来；
 - 所有的表名都以 "t_" 作为前缀；
-- 如果表格描述中存在 "id" 主键字段，则当生成 SQL 时，按照“表名去掉前缀再加上 "_id" 后缀”的规则重命名主键字段；
-- 所有主键字段类型都是 bigint
+- 对于存在 "id" 和 "pk" 标记字段，则当生成 SQL 时，按照“表名去掉前缀再加上 "_id" 后缀”的规则重命名主键字段；
+- 对于存在 "pk" 标记的字段，如果没有明确指明数据类型，则默认为 bigint，否则使用指明的数据类型。
+- 如果存在多个带 "pk" 标记的字段，意味着该表的主键为联合主键，主键的定义的位置放在所有字段定义完之后。
 - 每张表最后都要加上 `created_at` 和 `updated_at` 两个 datetime 类型的字段，其中创建时间字段默认为当前时间，修改时间字段会在记录更新时自动更新。
+
 对 JavaBean 代码要求如下：
 - 类名的生成规则为表名去掉前缀然后将下划线风格改为驼峰风格；
 - 这个类用 lombok 的 @Data 进行注解，并且不需要 getter/setter 方法；
 - 类中的属性与表字段一一对应，属性名的规则为将字段名的下划线风格改为驼峰风格，且第一个字母小写；
 - 属性类型不准用基本型别(primitive type)，而是必须用对象类型；
+- SQL 中的 bigint 类型对应 Java 中的 Long 类型。
+- SQL 中的 int 和 tinyint 类型对应 Java 中的 Integer 类型。
+- SQL 中的 decimal 类型对应 Java 中的 Double 类型。
 - SQL 中的时间日期类型对应 Java 中的 LocalDateTime 类型。
 - 类上面要加上 Javadoc 注释，注释内容为表的文字描述。
 - 每个属性都要加上 Javadoc 注释，注释内容为字段的文字描述。
@@ -25,6 +31,7 @@ t_my_user 用户表
   id pk
   user_name 用户名 varchar(50) unique not null
   password 加盐密码 varchar(100)
+  status 状态，1=正常，2=禁用 tinyint default 1
 ---
 
 根据上面的表格描述，生成的 SQL 如下：
@@ -35,6 +42,7 @@ CREATE TABLE `t_my_user`
   `my_user_id`    bigint        primary key     comment '主键',
   `user_name`     varchar(50)   unique not null comment '用户名',
   `password`      varchar(100)                  comment '加盐密码',
+  `status`        tinyint  default 1            comment '状态，1=正常，2=禁用',
   `created_at`    datetime default current_timestamp() not null comment '创建时间',
   `updated_at`    datetime default current_timestamp() not null on update current_timestamp() comment '修改时间'
 ) comment '用户表';
@@ -68,6 +76,11 @@ public class MyUser {
     private String password;
 
     /**
+     * 状态，1=正常，2=禁用
+     */
+    private Integer status;
+
+    /**
      * 创建时间
      */
     private LocalDateTime createdAt;
@@ -78,20 +91,19 @@ public class MyUser {
     private LocalDateTime updatedAt;
 }
 ```
-
-好了，下面是正式的表格描述：
-
-
+下面是正式的表格描述：
 
 ---
-t_hym_function_cat 菜单功能分类表
+t_hym_function_cat 功能分类表
   id pk
   category_name 分类名称 varchar(50) unique not null
+  visible 是否可见，0=不可见，1=可见 tinyint default 1
 ---
-t_hym_function 菜单功能表
+t_hym_function 功能表
   id pk
   function_name 功能名称 varchar(50) not null
-  page_name 页面名称 varchar(50) not null
+  function_code 功能代码 varchar(50) not null
+  page_name 页面名称 varchar(50)
   category_id 功能类别ID bigint not null
 ---
 t_hym_user 用户表
@@ -102,8 +114,18 @@ t_hym_user 用户表
   email 邮箱 varchar(50) unique
   avatar 头像 varchar(255)
   status 状态，1=正常，2=禁用 tinyint default 1
+  role_id 角色ID bigint
   last_login_time 最后登录时间 datetime
   last_login_ip 最后登录IP varchar(20)
 ---
+t_hym_role 角色表
+  id pk
+  role_name 角色名 varchar(50) unique not null
+  role_description 角色描述 varchar(200)
+---
+t_hym_role_function 角色功能表
+  role_id 角色ID bigint not null pk
+  function_id 功能ID bigint not null pk
+
 
 

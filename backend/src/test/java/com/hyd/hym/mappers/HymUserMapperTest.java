@@ -29,7 +29,7 @@ class HymUserMapperTest extends HymApplicationTest {
     var users = hymUserMapper.listUser(new Conditions()
       .addCondition(Condition.of(HymUser::getUserName, Operator.like, "%admin%"))
       .addCondition(Condition.of(HymUser::getHymUserId, Operator.in, List.of(1, 2, 3, 4, 5)))
-      .addCondition(Condition.of("status", Operator.eq, null))
+      .addCondition(Condition.of("status", Operator.eq, (Integer) null))
       .addOrderBy("hym_user_id DESC")
     );
     assertFalse(users.isEmpty());
