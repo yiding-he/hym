@@ -27,3 +27,11 @@ button:active {
   top: 0;
   box-shadow: 0 0 5px var(--main-color-shadow);
 }
+
+button:disabled, button:hover:disabled {
+  background-color: var(--field-border);
+  color: var(--text-color-light);
+  box-shadow: none;
+  border-color: var(--field-border);
+  top: 0;
+}

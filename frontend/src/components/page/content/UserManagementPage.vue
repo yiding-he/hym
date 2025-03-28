@@ -9,15 +9,15 @@ import {Header} from "../../table/DataTableCore";
 import {ref} from "vue";
 import {ApiList} from "../../../common/ApiClient";
 
-// 原始表头定义
+// 表头定义
 const headers: Header[] = [{
   name: 'hymUserId',
   label: 'ID'
 }, {
   label: '基本信息', children: [
-    {label: '用户名', name: 'userName'},
-    {label: '手机号', name: 'mobile'},
-    {label: '邮箱', name: 'email'},
+    {name: 'userName', label: '用户名'},
+    {name: 'mobile', label: '手机号'},
+    {name: 'email', label: '邮箱'},
   ]
 }, {
   name: 'status', label: '状态'
@@ -31,12 +31,13 @@ const query = ref({
   mobile$like: '',
   status$eq: ''
 })
+// 查询结果
 const data = ref<Object[]>([])
-
-const queryData = () => {
+// 查询方法
+const queryData = (event) => {
   ApiList.GetUserList.call({
     ...query.value
-  }).then(response => {
+  }, event.target).then(response => {
     data.value = response.rows;
   })
 }

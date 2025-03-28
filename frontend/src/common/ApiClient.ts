@@ -28,7 +28,6 @@ apiClient.interceptors.request.use(
     if (token) {
       config.headers.Authorization = `Bearer ${token}`;
     }
-    console.log(`请求 ${originalUrl} 带上鉴权 '${token}'`)
     return config;
   },
   error => {
@@ -73,12 +72,19 @@ export class ApiType<req, resp> {
   constructor(private name: string, private method: string) {
   }
 
-  call(data: req): Promise<resp> {
+  call(data: req, target: HTMLElement | null = null): Promise<resp> {
     // 这里的 apiClient 是 AxiosInstance 对象
+    if (target) {
+      target.setAttribute('disabled', 'disabled');
+    }
     if (this.method === "GET") {
-      return apiClient.get<req, resp>(this.name, {params: data});
+      return apiClient
+        .get<req, resp>(this.name, {params: data})
+        .finally(() => {target?.removeAttribute('disabled')});
     } else if (this.method === "POST") {
-      return apiClient.post<req, resp>(this.name, data);
+      return apiClient
+        .post<req, resp>(this.name, data)
+        .finally(() => {target?.removeAttribute('disabled')});
     } else {
       throw new Error(`不支持的请求方法：${this.method}`);
     }
