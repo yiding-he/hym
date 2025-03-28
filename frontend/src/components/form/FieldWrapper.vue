@@ -26,7 +26,7 @@ const fieldWidth = inject('fieldWidth', '200px')
   display: flex;
   flex-direction: column;
   margin-bottom: 10px;
-  gap: 5px;
+  gap: 3px;
 }
 .field-wrapper label {
   display: block;

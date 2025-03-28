@@ -11,7 +11,7 @@ public class HymConfig {
   @Data
   public static class Jwt {
     private String secret = "hym-jwt-s3cret|hym-jwt-s3cret|hym-jwt-s3cret|hym-jwt-s3cret|hym-jwt-s3cret|hym-jwt-s3cret|hym-jwt-s3cret";
-    private int ttlSeconds = 3600;
+    private int ttlSeconds = 360000;
     private int cacheSize = 1000;
     private String authHeader = "Authorization";
     private String authType = "Bearer";

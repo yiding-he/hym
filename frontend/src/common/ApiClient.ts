@@ -1,6 +1,6 @@
 import axios, {AxiosResponse} from 'axios';
 import {AppConfig} from "./AppConfig";
-import {User, UserStatus, useUserStore} from "./UserStore";
+import {User, useUserStore} from "./UserStore";
 import {Store} from 'pinia';
 
 const apiClient = axios.create();
@@ -75,10 +75,12 @@ export class ApiType<req, resp> {
 
   call(data: req): Promise<resp> {
     // 这里的 apiClient 是 AxiosInstance 对象
-    if (this.method !== "POST") {
-      return apiClient.get<req, resp>(this.name, {data: JSON.stringify(data)})
+    if (this.method === "GET") {
+      return apiClient.get<req, resp>(this.name, {params: data});
+    } else if (this.method === "POST") {
+      return apiClient.post<req, resp>(this.name, data);
     } else {
-      return apiClient.post<req, resp>(this.name, data)
+      throw new Error(`不支持的请求方法：${this.method}`);
     }
   }
 }
@@ -116,5 +118,14 @@ export const ApiList = {
       functions: FunctionCategory[],
     }
   >("/functions", "GET"),
+
+  // 查询用户列表
+  GetUserList: new ApiType<
+    Object,
+    {
+      total: number,
+      rows: Object[],
+    }
+  >("/user/list", "GET"),
 }
 

@@ -68,28 +68,29 @@ function onLoginButtonClick(event: Event) {
 <template>
   <dialog ref="loginDialog">
     <DialogTitle>登录{{ appConfig.applicationName }}</DialogTitle>
-    <FormWrapper>
       <form action="" @submit="onLoginButtonClick">
         <div class="form-body">
-          <FieldWrapper label="用户名 :">
-            <input type="text" ref="usernameTextField" name="username" v-model="username"/>
-          </FieldWrapper>
-          <FieldWrapper label="密码 :">
-            <input type="password" name="password" v-model="password"/>
-          </FieldWrapper>
-          <div class="error-message" v-if="errorMessage">{{ errorMessage }}</div>
-          <div class="form-buttons">
-            <Button>登录</Button>
-          </div>
+          <FormWrapper>
+            <FieldWrapper label="用户名 :">
+              <input type="text" ref="usernameTextField" name="username" v-model="username"/>
+            </FieldWrapper>
+            <FieldWrapper label="密码 :">
+              <input type="password" name="password" v-model="password"/>
+            </FieldWrapper>
+            <div class="error-message" v-if="errorMessage">{{ errorMessage }}</div>
+            <div class="form-buttons">
+              <Button>登录</Button>
+            </div>
+          </FormWrapper>
         </div>
       </form>
-    </FormWrapper>
   </dialog>
 </template>
 
 <style scoped>
 .form-body {
-  padding: 10px;
+  margin: 10px;
+  width: 200px;
 }
 
 .form-buttons {

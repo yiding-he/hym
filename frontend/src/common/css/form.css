@@ -1,23 +1,19 @@
-.field {
-  padding: 5px 0;
-  line-height: 20px;
-}
-
-.field-single-line {
-  display: block;
-}
-
-.field-single-line .field-label {
-  display: inline-block;
-}
-
-input[type=text], input[type=password] {
+input[type=text], input[type=password], select {
   border: 1px solid var(--field-border);
   line-height: 20px;
   border-radius: 4px;
   box-shadow: inset 2px 2px 2px var(--field-inset-shadow);
+  padding: 2px 4px;
+  height: 20px;
+  background-color: var(--main-background-color);
 }
-input[type=text]:focus, input[type=password]:focus {
+
+select {
+  height: inherit;
+  padding: 4px 6px;
+}
+
+input[type=text]:focus, input[type=password]:focus, select:focus {
   outline: unset;
   border-color: var(--field-border-focus);
   box-shadow: inset 0 0 6px var(--field-inset-shadow-focus);

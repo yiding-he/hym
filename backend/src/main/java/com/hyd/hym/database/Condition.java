@@ -25,6 +25,7 @@ public class Condition {
     condition.setOperator(operator);
     condition.setValues(values);
     parseGetter(getter, condition);
+    condition.adjust();
     return condition;
   }
 
@@ -37,6 +38,7 @@ public class Condition {
     condition.setPropName(propName);
     condition.setOperator(operator);
     condition.setValues(values);
+    condition.adjust();
     return condition;
   }
 
@@ -75,5 +77,14 @@ public class Condition {
 
   public String getColumnName() {
     return this.propName.replaceAll("([A-Z]+)", "_$1").toLowerCase();
+  }
+
+  /**
+   * 根据 operator 对 values 进行调整
+   */
+  private void adjust() {
+    if (this.operator == Operator.like && !this.values.isEmpty()) {
+      this.values = List.of("%" + this.values.getFirst() + "%");
+    }
   }
 }

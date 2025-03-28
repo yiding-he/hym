@@ -39,7 +39,7 @@ public abstract class BaseProvider {
       }
       sql.deleteCharAt(sql.length() - 1);
     }
-    log.info("SQL: {}", sql);
+    log.info("SQL: \n{}\n{}", sql, conditions);
     return sql.toString().trim();
   }
 

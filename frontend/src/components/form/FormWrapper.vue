@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import {provide} from "vue";
+import {h, provide, render, renderSlot, useSlots} from "vue";
 
 const props = defineProps({
   labelAlign: {
@@ -25,6 +25,11 @@ provide('fieldWidth', props.fieldWidth)
   </div>
 </template>
 
-<style scoped>
-
+<style>
+  .form-wrapper {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    gap: 10px;
+  }
 </style>

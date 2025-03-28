@@ -22,9 +22,8 @@ public class UserController extends WebApiV1Controller {
 
   @GetMapping("/user/list")
   public Response listUsers(@ModelAttribute Conditions conditions) {
-    log.info("list users: {}", conditions.getConditions());
     return Response.ok()
-      .addData("users", hymUserMapper.listUser(conditions));
+      .addData("rows", hymUserMapper.listUser(conditions));
   }
 
 }

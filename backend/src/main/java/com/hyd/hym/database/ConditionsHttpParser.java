@@ -1,5 +1,7 @@
 package com.hyd.hym.database;
 
+import org.springframework.util.StringUtils;
+
 import java.util.Map;
 import java.util.stream.Stream;
 
@@ -19,6 +21,9 @@ public class ConditionsHttpParser {
     for (Map.Entry<String, String> entry : allParams.entrySet()) {
       String key = entry.getKey();
       String value = entry.getValue();
+      if (!StringUtils.hasText(value)) {
+        continue;
+      }
 
       String[] parts = key.split("\\$");
       String propName = parts[0];
