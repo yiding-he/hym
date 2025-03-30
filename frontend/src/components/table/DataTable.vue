@@ -1,18 +1,26 @@
 <script setup lang="ts">
 
-import {Header, parseHeaders} from "./DataTableCore";
+import {Header, PageResult, parseHeaders} from "./DataTableCore";
 import {onMounted, ref} from "vue";
 
-const props = defineProps({
-  data: {
-    type: Array,
-    required: true
-  },
-  headers: {
-    type: Array<Header>,
-    required: true
+const props = withDefaults(defineProps<{
+  data: PageResult;
+  headers: Header[];
+}>(), {
+  data: () => ({ total: 0, pageIndex: 1, pageSize: 10, totalPage: 1, rows: [] }),
+  headers: () => []
+});
+
+const emits = defineEmits<{
+  (e: 'pageIndexChanged', pageIndex: number): void
+}>()
+
+const gotoPage = (pageIndex) => {
+  if (pageIndex < 1 || pageIndex >= props.data.totalPage) {
+    return
   }
-})
+  emits('pageIndexChanged', pageIndex)
+}
 
 // 解析出来的表头布局，用于渲染表头
 const headerLayout = ref()
@@ -37,13 +45,31 @@ onMounted(() => {
       </th>
     </tr>
     </thead>
-    <tbody>
-    <tr v-for="(row, index) in data" :key="index">
+    <tbody v-if="data.rows.length">
+    <tr v-for="(row, index) in data.rows" :key="index">
       <td v-for="(column, index) in columns" :key="index">
         {{ row[column.name] || '-' }}
       </td>
     </tr>
     </tbody>
+    <tbody v-else>
+    <tr>
+      <td colspan="100%" class="no-data-placeholder">暂无数据</td>
+    </tr>
+    </tbody>
+    <tfoot>
+    <tr>
+      <td colspan="100%">
+        <div class="pagination">
+          <button :disabled="data.pageIndex <= 1" @click="gotoPage(data.pageIndex--)">上一页</button>
+          <button :disabled="data.pageIndex >= data.totalPage" @click="gotoPage(data.pageIndex++)">下一页</button>
+          <span>第 {{ data.pageIndex }} 页 / 共 {{ data.totalPage }} 页</span>
+          <input type="number" v-model="data.pageIndex" style="width: 5em"
+                 :min="1" :max="data.totalPage - 1" @change="gotoPage($event.target.value)" >
+        </div>
+      </td>
+    </tr>
+   </tfoot>
   </table>
 </template>
 
@@ -63,5 +89,19 @@ onMounted(() => {
   background-color: var(--datatable-header-bgcolor); /* 表头背景色 */
   color: var(--datatable-header-textcolor);
   font-weight: bold; /* 表头字体加粗 */
+}
+
+.pagination {
+  display: flex;
+  justify-content: start;
+  align-items: center;
+  gap: 10px;
+  padding: 5px;
+}
+
+td.no-data-placeholder {
+  text-align: center;
+  color: var(--text-color-light2);
+  padding: 15px;
 }
 </style>

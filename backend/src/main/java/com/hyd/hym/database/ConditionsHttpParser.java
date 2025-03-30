@@ -25,21 +25,32 @@ public class ConditionsHttpParser {
         continue;
       }
 
-      String[] parts = key.split("\\$");
-      String propName = parts[0];
-      String operatorStr = parts.length > 1 ? parts[1] : "eq";
-
-      Condition condition;
-      Operator operator = Operator.valueOf(operatorStr);
-      if (operator == Operator.in || operator == Operator.nin) {
-        condition = Condition.of(propName, operator, Stream.of(value.split(",")).toList());
+      if (key.equalsIgnoreCase("pageIndex")) {
+        conditions.setPageIndex(Integer.parseInt(value));
+      } else if (key.equalsIgnoreCase("pageSize")) {
+        conditions.setPageSize(Integer.parseInt(value));
+      } else if (key.equalsIgnoreCase("orderBy")) {
+        conditions.addOrderBy(value);
       } else {
-        condition = Condition.of(propName, operator, value);
+        conditions.addCondition(parseOperCondition(key, value));
       }
-
-      conditions.addCondition(condition);
     }
 
     return conditions;
+  }
+
+  private static Condition parseOperCondition(String key, String value) {
+    String[] parts = key.split("\\$");
+    String propName = parts[0];
+    String operatorStr = parts.length > 1 ? parts[1] : "eq";
+
+    Condition condition;
+    Operator operator = Operator.valueOf(operatorStr);
+    if (operator == Operator.in || operator == Operator.nin) {
+      condition = Condition.of(propName, operator, Stream.of(value.split(",")).toList());
+    } else {
+      condition = Condition.of(propName, operator, value);
+    }
+    return condition;
   }
 }

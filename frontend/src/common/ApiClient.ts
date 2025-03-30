@@ -2,6 +2,7 @@ import axios, {AxiosResponse} from 'axios';
 import {AppConfig} from "./AppConfig";
 import {User, useUserStore} from "./UserStore";
 import {Store} from 'pinia';
+import {PageResult} from "../components/table/DataTableCore";
 
 const apiClient = axios.create();
 const ApiClient = {
@@ -128,10 +129,7 @@ export const ApiList = {
   // 查询用户列表
   GetUserList: new ApiType<
     Object,
-    {
-      total: number,
-      rows: Object[],
-    }
+    PageResult
   >("/user/list", "GET"),
 }
 

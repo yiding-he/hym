@@ -18,6 +18,14 @@ export type FinalColumn = {
   name: string
 }
 
+export type PageResult = {
+  total: number,
+  pageIndex: number,
+  pageSize: number,
+  totalPage: number,
+  rows: any[]
+}
+
 /**
  * 解析原始表头定义，生成表头布局和列定义
  */

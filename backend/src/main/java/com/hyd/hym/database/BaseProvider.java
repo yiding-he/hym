@@ -39,6 +39,10 @@ public abstract class BaseProvider {
       }
       sql.deleteCharAt(sql.length() - 1);
     }
+    if (conditions.getPageSize() > 0) {
+      sql.append(" limit ").append(conditions.getPageSize())
+        .append(" offset ").append(conditions.getPageIndex() * conditions.getPageSize());
+    }
     log.info("SQL: \n{}\n{}", sql, conditions);
     return sql.toString().trim();
   }

@@ -2,11 +2,9 @@ package com.hyd.hym.api.v1;
 
 import com.hyd.hym.Response;
 import com.hyd.hym.api.WebApiV1Controller;
-import com.hyd.hym.database.Condition;
-import com.hyd.hym.database.Conditions;
-import com.hyd.hym.database.ConditionsHttpParser;
-import com.hyd.hym.database.Operator;
+import com.hyd.hym.database.*;
 import com.hyd.hym.mappers.HymUserMapper;
+import com.hyd.hym.models.HymUser;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -22,9 +20,14 @@ public class UserController extends WebApiV1Controller {
 
   @GetMapping("/user/list")
   public Response listUsers(@ModelAttribute Conditions conditions) throws Exception {
-    Thread.sleep(3000);
+    Thread.sleep(1000);
+    var page = hymUserMapper.listUserPage(conditions);
     return Response.ok()
-      .addData("rows", hymUserMapper.listUser(conditions));
+      .addData("rows", page.data())
+      .addData("total", page.totalCount())
+      .addData("pageSize", page.pageSize())
+      .addData("pageIndex", page.pageIndex())
+      .addData("totalPage", page.totalPage());
   }
 
 }

@@ -5,7 +5,7 @@ import FieldWrapper from "../../form/FieldWrapper.vue";
 import TitledPane from "../../container/TitledPane.vue";
 import FieldButtonWrapper from "../../form/FieldButtonWrapper.vue";
 import DataTable from "../../table/DataTable.vue";
-import {Header} from "../../table/DataTableCore";
+import {Header, PageResult} from "../../table/DataTableCore";
 import {ref} from "vue";
 import {ApiList} from "../../../common/ApiClient";
 
@@ -32,14 +32,24 @@ const query = ref({
   status$eq: ''
 })
 // 查询结果
-const data = ref<Object[]>([])
+const data = ref<PageResult>({
+  total: 0, pageIndex: 0, pageSize: 10, rows: [], totalPage: 0
+})
 // 查询方法
 const queryData = (event) => {
   ApiList.GetUserList.call({
     ...query.value
   }, event.target).then(response => {
-    data.value = response.rows;
+    console.log("查询结果，总记录数=", response.total, "总页数=", response.totalPage)
+    data.value = {
+      ...response,
+      pageIndex: response.pageIndex + 1,  // 查询参数是第 0 页，展示出来需是第 1 页
+    };
   })
+}
+const onPageIndexChanged = (pageIndex) => {
+  data.value.pageIndex = pageIndex;
+  queryData(null);
 }
 
 </script>
@@ -67,7 +77,7 @@ const queryData = (event) => {
       </FormWrapper>
     </form>
   </TitledPane>
-  <DataTable :headers="headers" :data="data"></DataTable>
+  <DataTable :headers="headers" :data="data" @pageIndexChanged="onPageIndexChanged"></DataTable>
 </template>
 
 <style scoped>

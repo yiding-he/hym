@@ -1,6 +1,7 @@
 package com.hyd.hym.database;
 
 import lombok.Getter;
+import lombok.Setter;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -15,6 +16,19 @@ public class Conditions extends HashMap<String, Object> {
   private final List<String> orderBy = new ArrayList<>();
 
   private final AtomicInteger counter = new AtomicInteger();
+
+  private boolean withRowCount = false;
+
+  @Setter
+  private int pageSize = 10;
+
+  @Setter
+  private int pageIndex = 0;
+
+  public Conditions withRowCount() {
+    this.withRowCount = true;
+    return this;
+  }
 
   public Conditions addCondition(Condition condition) {
     this.conditions.add(condition);
