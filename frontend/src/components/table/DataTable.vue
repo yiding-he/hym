@@ -15,7 +15,8 @@ const emits = defineEmits<{
   (e: 'pageIndexChanged', pageIndex: number): void
 }>()
 
-const gotoPage = (pageIndex) => {
+const gotoPage = (pageIndex: number | string) => {
+  pageIndex = parseInt(pageIndex as string)
   if (pageIndex < 1 || pageIndex >= props.data.totalPage) {
     return
   }
@@ -65,7 +66,7 @@ onMounted(() => {
           <button :disabled="data.pageIndex >= data.totalPage" @click="gotoPage(data.pageIndex++)">下一页</button>
           <span>第 {{ data.pageIndex }} 页 / 共 {{ data.totalPage }} 页</span>
           <input type="number" v-model="data.pageIndex" style="width: 5em"
-                 :min="1" :max="data.totalPage - 1" @change="gotoPage($event.target.value)" >
+                 :min="1" :max="data.totalPage - 1" @change="gotoPage(($event.target as HTMLInputElement).value)" >
         </div>
       </td>
     </tr>

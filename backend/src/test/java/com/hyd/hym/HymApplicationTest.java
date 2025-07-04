@@ -19,7 +19,7 @@ import java.util.Map;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @SpringBootTest(
-  webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT,
+  webEnvironment = SpringBootTest.WebEnvironment.NONE,
   properties = {
     "debug=true"
   })

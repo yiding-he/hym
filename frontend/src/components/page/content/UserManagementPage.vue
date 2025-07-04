@@ -36,7 +36,7 @@ const data = ref<PageResult>({
   total: 0, pageIndex: 0, pageSize: 10, rows: [], totalPage: 0
 })
 // 查询方法
-const queryData = (event) => {
+const queryData = (event: any) => {
   ApiList.GetUserList.call({
     ...query.value
   }, event.target).then(response => {
@@ -47,7 +47,7 @@ const queryData = (event) => {
     };
   })
 }
-const onPageIndexChanged = (pageIndex) => {
+const onPageIndexChanged = (pageIndex: number) => {
   data.value.pageIndex = pageIndex;
   queryData(null);
 }
