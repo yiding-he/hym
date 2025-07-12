@@ -53,4 +53,13 @@ public class Conditions extends HashMap<String, Object> {
     this.put(paramName, paramValue);
     return "#{" + paramName + "}";
   }
+
+  public Conditions withTableName(String tableName) {
+    this.put("__tableName", tableName);
+    return this;
+  }
+
+  public String getTableName() {
+    return (String) this.get("__tableName");
+  }
 }

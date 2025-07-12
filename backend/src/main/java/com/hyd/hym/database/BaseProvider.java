@@ -6,11 +6,12 @@ import java.util.List;
 import java.util.Objects;
 
 @Slf4j
-public abstract class BaseProvider {
+public class BaseProvider {
 
   @SuppressWarnings("unused")
   public String toSql(Conditions conditions) {
-    var sql = new StringBuilder(getSqlStart(conditions));
+    var selectSegment = "select " + (conditions.isWithRowCount() ? "SQL_CALC_FOUND_ROWS" : "") + " * from " + conditions.getTableName();
+    var sql = new StringBuilder(selectSegment);
     if (conditions.hasCondition()) {
       sql.append(" where ");
       for (Condition condition : conditions.getConditions()) {
@@ -53,7 +54,5 @@ public abstract class BaseProvider {
       && !values.getFirst().equals("")
       && !values.stream().allMatch(Objects::isNull);
   }
-
-  protected abstract String getSqlStart(Conditions conditions);
 
 }

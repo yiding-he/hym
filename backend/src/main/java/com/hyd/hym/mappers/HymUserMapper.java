@@ -3,16 +3,15 @@ package com.hyd.hym.mappers;
 import com.hyd.hym.database.BaseProvider;
 import com.hyd.hym.database.Conditions;
 import com.hyd.hym.database.Page;
-import com.hyd.hym.events.UserEvents;
 import com.hyd.hym.models.HymUser;
 import org.apache.ibatis.annotations.*;
-import org.springframework.context.event.EventListener;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.function.Function;
 
 @Mapper
-public interface HymUserMapper {
+public interface HymUserMapper extends BaseMapper {
 
   @Select("""
     SELECT hym_user_id, user_name, password, status
@@ -30,30 +29,12 @@ public interface HymUserMapper {
     @Param("lastLoginIp") String lastLoginIp
   );
 
-  /// ///////////////////////////
-
-  @Select("select found_rows()")
-  int selectFoundRows();
-
   @Transactional
   default Page<HymUser> listUserPage(Conditions conditions) {
-    var list = listUser(conditions);
-    var count = selectFoundRows();
-    var totalPage = (count + conditions.getPageSize() - 1) / conditions.getPageSize();
-    return new Page<>(
-      conditions.getPageSize(), conditions.getPageIndex(),
-      count, totalPage, list
-    );
+    return listPage(conditions.withTableName("t_hym_user"), this::listUser);
   }
 
-  @SelectProvider(type = ListUserProvider.class, method = "toSql")
+  @SelectProvider(type = BaseProvider.class, method = "toSql")
   List<HymUser> listUser(Conditions conditions);
 
-  class ListUserProvider extends BaseProvider {
-
-    @Override
-    protected String getSqlStart(Conditions conditions) {
-      return "select " + (conditions.isWithRowCount() ? "SQL_CALC_FOUND_ROWS" : "") + " * from t_hym_user";
-    }
-  }
 }

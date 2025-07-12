@@ -6,7 +6,7 @@ import TitledPane from "../../container/TitledPane.vue";
 import FieldButtonWrapper from "../../form/FieldButtonWrapper.vue";
 import DataTable from "../../table/DataTable.vue";
 import {Header, PageResult} from "../../table/DataTableCore";
-import {ref} from "vue";
+import {onMounted, ref} from "vue";
 import {ApiList} from "../../../common/ApiClient";
 
 // 表头定义
@@ -39,7 +39,7 @@ const data = ref<PageResult>({
 const queryData = (event: any) => {
   ApiList.GetUserList.call({
     ...query.value
-  }, event.target).then(response => {
+  }, event?.target).then(response => {
     console.log("查询结果，总记录数=", response.total, "总页数=", response.totalPage)
     data.value = {
       ...response,
@@ -52,6 +52,9 @@ const onPageIndexChanged = (pageIndex: number) => {
   queryData(null);
 }
 
+onMounted(async () => {
+  queryData(null);
+})
 </script>
 
 <template>

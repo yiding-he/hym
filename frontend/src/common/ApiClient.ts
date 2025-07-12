@@ -131,5 +131,11 @@ export const ApiList = {
     Object,
     PageResult
   >("/user/list", "GET"),
+
+  // 查询角色列表
+  GetRoleList: new ApiType<
+    Object,
+    PageResult
+  >("/role/list", "GET"),
 }
 
