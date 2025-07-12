@@ -6,8 +6,9 @@ import TitledPane from "../../container/TitledPane.vue";
 import FieldButtonWrapper from "../../form/FieldButtonWrapper.vue";
 import DataTable from "../../table/DataTable.vue";
 import {Header, PageResult} from "../../table/DataTableCore";
-import {onMounted, ref} from "vue";
+import {getCurrentInstance, onMounted, onUnmounted, ref} from "vue";
 import {ApiList} from "../../../common/ApiClient";
+import {EventBus} from "../../../common/EventBus";
 
 // 表头定义
 const headers: Header[] = [{
@@ -29,9 +30,15 @@ const data = ref<PageResult>({
 })
 // 查询方法
 const queryData = (event: any) => {
-  ApiList.GetRoleList.call({
-    ...query.value
-  }, event?.target).then(response => {
+  ApiList.GetRoleList.callByOptions({
+    parameters: query.value,
+    onStart: () => {
+      event?.target.setAttribute('disabled', 'disabled')
+    },
+    onFinish: () => {
+      event?.target.removeAttribute('disabled')
+    }
+  }).then(response => {
     console.log("查询结果，总记录数=", response.total, "总页数=", response.totalPage)
     data.value = {
       ...response,
@@ -47,6 +54,7 @@ const onPageIndexChanged = (pageIndex: number) => {
 onMounted(async () => {
   queryData(null);
 })
+
 </script>
 
 <template>

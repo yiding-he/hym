@@ -18,7 +18,6 @@ let userStore: Store<"user", User> | null = null;
 // 拦截请求路径，添加前缀
 apiClient.interceptors.request.use(
   config => {
-    const originalUrl = config.url;
     if (config.url?.startsWith("/")) {
       config.url = ApiClient.apiUrl + config.url;
     }
@@ -64,6 +63,14 @@ type Function = {
   pageName: string,
 }
 
+type CallOptions = {
+  parameters?: any,
+  onStart?: () => void,
+  onSuccess?: (response: any) => void,
+  onError?: (error: any) => void,
+  onFinish?: () => void,
+}
+
 //////////////////////////////
 
 /**
@@ -73,21 +80,41 @@ export class ApiType<req, resp> {
   constructor(private name: string, private method: string) {
   }
 
-  call(data: req, target: HTMLElement | null = null): Promise<resp> {
-    // 这里的 apiClient 是 AxiosInstance 对象
-    if (target) {
-      target.setAttribute('disabled', 'disabled');
+  async call(data: req, target: HTMLElement | null = null): Promise<resp> {
+    return this.callByOptions({
+      parameters: data,
+      onStart: () => {
+        if (target) {
+          target.setAttribute('disabled', 'disabled');
+        }
+      },
+      onFinish: () => {
+        if (target) {
+          target.removeAttribute('disabled');
+        }
+      }
+    })
+  }
+
+  async callByOptions(options: CallOptions): Promise<resp> {
+    if (options.onStart) {
+      options.onStart();
     }
-    if (this.method === "GET") {
-      return apiClient
-        .get<req, resp>(this.name, {params: data})
-        .finally(() => {target?.removeAttribute('disabled')});
-    } else if (this.method === "POST") {
-      return apiClient
-        .post<req, resp>(this.name, data)
-        .finally(() => {target?.removeAttribute('disabled')});
-    } else {
-      throw new Error(`不支持的请求方法：${this.method}`);
+
+    try {
+      const data = options.parameters;
+      // 这里的 apiClient 是 AxiosInstance 对象
+      if (this.method === "GET") {
+        return await apiClient.get<req, resp>(this.name, {params: data});
+      } else if (this.method === "POST") {
+        return await apiClient.post<req, resp>(this.name, data);
+      } else {
+        throw new Error(`不支持的请求方法：${this.method}`);
+      }
+    } finally {
+      if (options.onFinish) {
+        options.onFinish();
+      }
     }
   }
 }
