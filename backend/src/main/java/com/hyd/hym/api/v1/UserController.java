@@ -21,7 +21,7 @@ public class UserController extends WebApiV1Controller {
   @GetMapping("/user/list")
   public Response listUsers(@ModelAttribute Conditions conditions) throws Exception {
     Thread.sleep(1000);
-    var page = hymUserMapper.listUserPage(conditions);
+    var page = hymUserMapper.listPage(conditions);
     return Response.ok()
       .addData("rows", page.data())
       .addData("total", page.totalCount())

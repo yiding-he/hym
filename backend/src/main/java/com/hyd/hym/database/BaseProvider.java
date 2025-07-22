@@ -2,20 +2,29 @@ package com.hyd.hym.database;
 
 import lombok.extern.slf4j.Slf4j;
 
-import java.util.List;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 @Slf4j
 public class BaseProvider {
 
   @SuppressWarnings("unused")
   public String toSql(Conditions conditions) {
-    var selectSegment = "select " + (conditions.isWithRowCount() ? "SQL_CALC_FOUND_ROWS" : "") + " * from " + conditions.getTableName();
+    var projection = String.join(",", conditions.getProjection());
+    if (projection.isEmpty()) {
+      projection = "*";
+    }
+
+    var selectSegment = "select " +
+      (conditions.isWithRowCount() ? "SQL_CALC_FOUND_ROWS" : "") +
+      projection +
+      " from " + conditions.getTableName();
+
     var sql = new StringBuilder(selectSegment);
     if (conditions.hasCondition()) {
       sql.append(" where ");
       for (Condition condition : conditions.getConditions()) {
-        if (!validateConditionValues(condition.getValues())) {
+        if (!validateConditionValues(condition)) {
           continue;
         }
         sql.append(condition.getColumnName()).append(" ").append(condition.getOperator().getCode()).append(" ");
@@ -26,7 +35,7 @@ public class BaseProvider {
           }
           sql.deleteCharAt(sql.length() - 1);
           sql.append(")");
-        } else {
+        } else if (condition.getOperator().isNeedParams()) {
           sql.append(conditions.param(condition.getValues().getFirst()));
         }
         sql.append(" and ");
@@ -48,11 +57,18 @@ public class BaseProvider {
     return sql.toString().trim();
   }
 
-  private boolean validateConditionValues(List<Object> values) {
-    return values != null
-      && !values.isEmpty()
-      && !values.getFirst().equals("")
-      && !values.stream().allMatch(Objects::isNull);
+  private boolean validateConditionValues(Condition condition) {
+    var values = condition.getValues();
+    var needParams = condition.getOperator().isNeedParams();
+
+    if (needParams) {
+      return values != null
+        && !values.isEmpty()
+        && !values.getFirst().equals("")
+        && !values.stream().allMatch(Objects::isNull);
+    } else {
+      return true;
+    }
   }
 
 }

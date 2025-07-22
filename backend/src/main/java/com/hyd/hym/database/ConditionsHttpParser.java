@@ -26,9 +26,9 @@ public class ConditionsHttpParser {
       }
 
       if (key.equalsIgnoreCase("pageIndex")) {
-        conditions.setPageIndex(Integer.parseInt(value));
+        conditions.pageIndex(Integer.parseInt(value));
       } else if (key.equalsIgnoreCase("pageSize")) {
-        conditions.setPageSize(Integer.parseInt(value));
+        conditions.pageSize(Integer.parseInt(value));
       } else if (key.equalsIgnoreCase("orderBy")) {
         conditions.addOrderBy(value);
       } else {

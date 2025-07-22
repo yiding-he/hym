@@ -19,7 +19,7 @@ public class RoleController extends WebApiV1Controller {
   @GetMapping("/role/list")
   public Response listRoles(@ModelAttribute Conditions conditions) throws Exception {
     Thread.sleep(1000);
-    var page = hymRoleMapper.listRolePage(conditions);
+    var page = hymRoleMapper.listPage(conditions);
     return Response.ok()
       .addData("rows", page.data())
       .addData("total", page.totalCount())

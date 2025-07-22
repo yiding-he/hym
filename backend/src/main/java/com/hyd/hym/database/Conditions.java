@@ -1,15 +1,17 @@
 package com.hyd.hym.database;
 
 import lombok.Getter;
-import lombok.Setter;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 
 @Getter
 public class Conditions extends HashMap<String, Object> {
+
+  private final List<String> projection = new ArrayList<>();
 
   private final List<Condition> conditions = new ArrayList<>();
 
@@ -19,13 +21,35 @@ public class Conditions extends HashMap<String, Object> {
 
   private boolean withRowCount = false;
 
-  @Setter
   private int pageSize = 10;
 
-  @Setter
   private int pageIndex = 0;
 
   public Conditions withRowCount() {
+    this.withRowCount = true;
+    return this;
+  }
+
+  public Conditions projection(String... projection) {
+    Collections.addAll(this.projection, projection);
+    return this;
+  }
+
+  public Conditions page(int pageIndex, int pageSize) {
+    this.pageIndex = pageIndex;
+    this.pageSize = pageSize;
+    this.withRowCount = true;
+    return this;
+  }
+
+  public Conditions pageIndex(int pageIndex) {
+    this.pageIndex = pageIndex;
+    this.withRowCount = true;
+    return this;
+  }
+
+  public Conditions pageSize(int pageSize) {
+    this.pageSize = pageSize;
     this.withRowCount = true;
     return this;
   }

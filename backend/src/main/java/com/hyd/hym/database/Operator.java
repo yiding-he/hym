@@ -24,14 +24,22 @@ public enum Operator {
 
   nin("NOT IN"),
 
-  isnull("IS NULL"),
+  isnull("IS NULL", false),
 
-  notnull("IS NOT NULL");
+  notnull("IS NOT NULL", false);
 
   private final String code;
 
+  private final boolean needParams;
+
   Operator(String code) {
     this.code = code;
+    this.needParams = true;
+  }
+
+  Operator(String code, boolean needParams) {
+    this.code = code;
+    this.needParams = needParams;
   }
 
   public static Operator of(String code) {

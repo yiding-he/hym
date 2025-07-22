@@ -1,23 +1,23 @@
 package com.hyd.hym.mappers;
 
-import com.hyd.hym.database.BaseProvider;
+import com.hyd.hym.database.Condition;
 import com.hyd.hym.database.Conditions;
+import com.hyd.hym.database.Operator;
 import com.hyd.hym.database.Page;
 import com.hyd.hym.models.HymUser;
 import org.apache.ibatis.annotations.*;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
-import java.util.function.Function;
-
 @Mapper
-public interface HymUserMapper extends BaseMapper {
+@TableName("t_hym_user")
+public interface HymUserMapper extends BaseMapper<HymUser> {
 
-  @Select("""
-    SELECT hym_user_id, user_name, password, status
-    FROM t_hym_user
-    where user_name=#{username}""")
-  HymUser selectForUserLogin(String username);
+  default HymUser selectForUserLogin(String username) {
+    return find(new Conditions()
+      .projection("hym_user_id", "user_name", "password", "status")
+      .addCondition(Condition.of("user_name", Operator.eq, username))
+    );
+  }
 
   @Update("""
     UPDATE t_hym_user
@@ -28,13 +28,5 @@ public interface HymUserMapper extends BaseMapper {
     @Param("username") String username,
     @Param("lastLoginIp") String lastLoginIp
   );
-
-  @Transactional
-  default Page<HymUser> listUserPage(Conditions conditions) {
-    return listPage(conditions.withTableName("t_hym_user"), this::listUser);
-  }
-
-  @SelectProvider(type = BaseProvider.class, method = "toSql")
-  List<HymUser> listUser(Conditions conditions);
 
 }

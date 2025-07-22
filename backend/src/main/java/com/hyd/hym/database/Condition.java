@@ -43,7 +43,7 @@ public class Condition {
   }
 
   public static Condition of(String propName, Operator operator, Object... values) {
-    return of(propName, operator, List.of(values));
+    return of(propName, operator, values == null || values.length == 0 || values[0] == null ? null : List.of(values));
   }
 
   /**
