@@ -63,12 +63,65 @@ type Function = {
   pageName: string,
 }
 
-type CallOptions = {
-  parameters?: any,
+export type CallHook = {
   onStart?: () => void,
-  onSuccess?: (response: any) => void,
-  onError?: (error: any) => void,
   onFinish?: () => void,
+}
+
+export class CallOptions {
+  // 定义类的属性，使用可选参数
+  constructor(
+    public parameters?: any,
+    public hooks: CallHook[] = []
+  ) {
+  }
+
+  static of(parameters: any): CallOptions {
+    return new CallOptions(parameters);
+  }
+
+  apply(func: ((o: CallOptions) => void) | undefined): CallOptions {
+    if (func) {
+      func(this);
+    }
+    return this;
+  }
+
+  // 添加 addHook 方法
+  addHook(hook: CallHook): this {
+    if (hook) {
+      this.hooks.push(hook);
+    }
+    return this;
+  }
+
+  // 设置当调用接口时，将指定的 HTML 元素设置为禁用状态，并在调用结束后恢复可用
+  addElementsDisabledWhenCalling(target: HTMLElement[] | null = null): this {
+    if (target == null || target.length === 0) {
+      return this;
+    }
+    this.addHook({
+      onStart: () => {
+        if (target) {
+          target.forEach(element => {
+            if (element) {
+              element.setAttribute('disabled', 'disabled');
+            }
+          });
+        }
+      },
+      onFinish: () => {
+        if (target) {
+          target.forEach(element => {
+            if (element) {
+              element.removeAttribute('disabled');
+            }
+          });
+        }
+      }
+    });
+    return this;
+  }
 }
 
 //////////////////////////////
@@ -81,8 +134,7 @@ export class ApiType<req, resp> {
   }
 
   async call(data: req, target: HTMLElement | null = null): Promise<resp> {
-    return this.callByOptions({
-      parameters: data,
+    return this.callByOptions(CallOptions.of(data).addHook({
       onStart: () => {
         if (target) {
           target.setAttribute('disabled', 'disabled');
@@ -93,12 +145,13 @@ export class ApiType<req, resp> {
           target.removeAttribute('disabled');
         }
       }
-    })
+    }))
   }
 
   async callByOptions(options: CallOptions): Promise<resp> {
-    if (options.onStart) {
-      options.onStart();
+    const exists = (obj: any): boolean => obj;
+    if (options.hooks) {
+      options.hooks.filter(exists).map(hook => hook.onStart).filter(exists).forEach(fn => fn?.());
     }
 
     try {
@@ -112,8 +165,8 @@ export class ApiType<req, resp> {
         throw new Error(`不支持的请求方法：${this.method}`);
       }
     } finally {
-      if (options.onFinish) {
-        options.onFinish();
+      if (options.hooks) {
+        options.hooks.filter(exists).map(hook => hook.onFinish).filter(exists).forEach(fn => fn?.());
       }
     }
   }
@@ -148,9 +201,7 @@ export const ApiList = {
   // 获取功能菜单
   GetFunctions: new ApiType<
     {},
-    {
-      functions: FunctionCategory[],
-    }
+    { functions: FunctionCategory[], }
   >("/functions", "GET"),
 
   // 查询用户列表

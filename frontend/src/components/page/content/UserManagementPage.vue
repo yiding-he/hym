@@ -7,7 +7,10 @@ import FieldButtonWrapper from "../../form/FieldButtonWrapper.vue";
 import DataTable from "../../table/DataTable.vue";
 import {Header, PageResult} from "../../table/DataTableCore";
 import {onMounted, ref} from "vue";
-import {ApiList} from "../../../common/ApiClient";
+import {ApiList, CallOptions} from "../../../common/ApiClient";
+
+// 数据表格
+const dataTableRef = ref<InstanceType<typeof DataTable>>();
 
 // 表头定义
 const headers: Header[] = [{
@@ -37,15 +40,16 @@ const data = ref<PageResult>({
 })
 // 查询方法
 const queryData = (event: any) => {
-  ApiList.GetUserList.call({
-    ...query.value
-  }, event?.target).then(response => {
-    console.log("查询结果，总记录数=", response.total, "总页数=", response.totalPage)
-    data.value = {
-      ...response,
-      pageIndex: response.pageIndex + 1,  // 查询参数是第 0 页，展示出来需是第 1 页
-    };
-  })
+  const options = CallOptions.of(query.value)
+    .apply(dataTableRef.value?.addHooksToCallOptions)
+    .addElementsDisabledWhenCalling([event?.target])
+
+  ApiList.GetUserList
+    .callByOptions(options)
+    .then(response => {
+      console.log("查询结果 ", response)
+      data.value = response;
+    })
 }
 const onPageIndexChanged = (pageIndex: number) => {
   data.value.pageIndex = pageIndex;
@@ -80,7 +84,7 @@ onMounted(async () => {
       </FormWrapper>
     </form>
   </TitledPane>
-  <DataTable :headers="headers" :data="data" @pageIndexChanged="onPageIndexChanged"></DataTable>
+  <DataTable ref="dataTableRef" :headers="headers" :data="data" @pageIndexChanged="onPageIndexChanged"></DataTable>
 </template>
 
 <style scoped>

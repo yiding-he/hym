@@ -7,8 +7,11 @@ import FieldButtonWrapper from "../../form/FieldButtonWrapper.vue";
 import DataTable from "../../table/DataTable.vue";
 import {Header, PageResult} from "../../table/DataTableCore";
 import {getCurrentInstance, onMounted, onUnmounted, ref} from "vue";
-import {ApiList} from "../../../common/ApiClient";
+import {ApiList, CallOptions} from "../../../common/ApiClient";
 import {EventBus} from "../../../common/EventBus";
+
+// 数据表格
+const dataTableRef = ref<InstanceType<typeof DataTable>>();
 
 // 表头定义
 const headers: Header[] = [{
@@ -30,23 +33,26 @@ const data = ref<PageResult>({
 })
 // 查询方法
 const queryData = (event: any) => {
-  ApiList.GetRoleList.callByOptions({
-    parameters: query.value,
-    onStart: () => {
-      event?.target.setAttribute('disabled', 'disabled')
-    },
-    onFinish: () => {
-      event?.target.removeAttribute('disabled')
-    }
-  }).then(response => {
-    console.log("查询结果，总记录数=", response.total, "总页数=", response.totalPage)
-    data.value = {
-      ...response,
-      pageIndex: response.pageIndex + 1,  // 查询参数是第 0 页，展示出来需是第 1 页
-    };
+  const options = CallOptions
+    .of({
+      ...query.value,
+      pageIndex: data.value.pageIndex,
+      pageSize: data.value.pageSize
+    })
+    .apply(dataTableRef.value?.addHooksToCallOptions)
+    .addElementsDisabledWhenCalling([event?.target]);
+
+  ApiList.GetRoleList.callByOptions(options).then(response => {
+    data.value = response;
   })
 }
+const queryDataWithPage0 = (event: any) => {
+  data.value.pageIndex = 0;
+  queryData(event);
+}
+
 const onPageIndexChanged = (pageIndex: number) => {
+  console.log('onPageIndexChanged', pageIndex);
   data.value.pageIndex = pageIndex;
   queryData(null);
 }
@@ -65,12 +71,12 @@ onMounted(async () => {
           <input type="text" name="user_name$like" v-model="query.role_name$like">
         </FieldWrapper>
         <FieldButtonWrapper>
-          <button type="submit" @click.prevent="queryData">查询</button>
+          <button type="submit" @click.prevent="queryDataWithPage0">查询</button>
         </FieldButtonWrapper>
       </FormWrapper>
     </form>
   </TitledPane>
-  <DataTable :headers="headers" :data="data" @pageIndexChanged="onPageIndexChanged"></DataTable>
+  <DataTable ref="dataTableRef" :headers="headers" :data="data" @pageIndexChanged="onPageIndexChanged"></DataTable>
 </template>
 
 <style scoped>

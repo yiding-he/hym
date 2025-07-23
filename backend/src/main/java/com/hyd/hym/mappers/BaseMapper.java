@@ -31,7 +31,7 @@ public interface BaseMapper<T> {
 
   @Transactional
   default Page<T> listPage(Conditions conditions) {
-    var list = list(conditions);
+    var list = list(conditions.withRowCount());
     var count = selectFoundRows();
     var totalPage = (count + conditions.getPageSize() - 1) / conditions.getPageSize();
     return new Page<>(
