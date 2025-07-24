@@ -1,22 +1,20 @@
 <script setup lang="ts">
-import {inject} from "vue";
+import {FieldConfig, FormConfig} from "./FormConfig";
+import {onMounted, PropType} from "vue";
 
-defineProps({
-  label: {
-    type: String,
-    required: false,
-    default: '',
-  }
+const props = defineProps({
+  config: {type: Object as PropType<FieldConfig>, required: true},
+  form: {type: Object as PropType<FormConfig>, required: true}
 })
 
-const labelAlign = inject('labelAlign', 'left')
-const fieldWidth = inject('fieldWidth', '200px')
+onMounted(() => {
+})
 
 </script>
 
 <template>
-  <div class="field-wrapper" :style="{width: fieldWidth}">
-    <label :style="{textAlign: labelAlign}">{{ label }}</label>
+  <div class="field-wrapper" :style="{width: form.fieldWidth}">
+    <label :style="{textAlign: form.labelAlign}">{{ config.label }}</label>
     <slot></slot>
   </div>
 </template>
