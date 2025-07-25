@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import {PropType, provide, ref} from "vue";
+import {getCurrentInstance, onMounted, PropType, provide, ref} from "vue";
 import {FieldType, FormConfig} from "./FormConfig";
 import FieldWrapper from "./FieldWrapper.vue";
 
@@ -15,12 +15,22 @@ const query = ref<Record<string, any>>(
 );
 
 defineExpose({
-  setQuery: (query: any) => {
-    Object.keys(query).forEach(key => {
-      query.value[key] = query[key]
+  setQuery: (_query: any) => {
+    Object.keys(_query).forEach(key => {
+      query.value[key] = _query[key]
     })
   },
   getQuery: () => query.value,
+})
+
+onMounted(() => {
+  const autoFocusFieldName = props.config?.fields.filter(f => f.autofocus).map(f => f.name)
+  if (autoFocusFieldName.length > 0) {
+    const field = getCurrentInstance()?.vnode?.el?.querySelector(`input[name="${autoFocusFieldName[0]}"]`)
+    if (field instanceof HTMLInputElement) {
+      field.focus()
+    }
+  }
 })
 
 </script>
@@ -43,6 +53,6 @@ defineExpose({
     display: flex;
     flex-direction: row;
     flex-wrap: wrap;
-    gap: 10px;
+    column-gap: 10px;
   }
 </style>

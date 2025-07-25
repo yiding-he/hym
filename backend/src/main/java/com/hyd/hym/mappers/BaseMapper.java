@@ -41,16 +41,19 @@ public interface BaseMapper<T> {
   }
 
   default List<T> list(Conditions conditions) {
-    return getTableName()
-      .map(tableName -> __list(conditions.withTableName(tableName)))
-      .orElseThrow(() -> new RuntimeException("TableName not found"));
+    Optional<String> tableName = getTableName();
+    if (tableName.isEmpty()) {
+      throw new RuntimeException("TableName not found");
+    }
+    return __list(conditions.withTableName(tableName.get()));
   }
 
   default T find(Conditions conditions) {
-    return getTableName()
-      .map(tableName -> __list(conditions.withTableName(tableName)))
-      .flatMap(list -> list.stream().findFirst())
-      .orElseThrow(() -> new RuntimeException("TableName not found"));
+    Optional<String> tableName = getTableName();
+    if (tableName.isEmpty()) {
+      throw new RuntimeException("TableName not found");
+    }
+    return __list(conditions.withTableName(tableName.get())).stream().findFirst().orElse(null);
   }
 
   @SelectProvider(type = BaseProvider.class, method = "toSql")

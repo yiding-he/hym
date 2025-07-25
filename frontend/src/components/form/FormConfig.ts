@@ -1,15 +1,12 @@
-export type FormConfig = {
-  labelAlign: 'left' | 'center' | 'right';
-  fieldWidth: string;
-  fields: FieldConfig[];
-}
+export class FormConfig {
+  labelAlign: 'left' | 'center' | 'right' = 'left';
+  fieldWidth: string = '200px';
+  fields: FieldConfig[] = [];
 
-export const NewFormConfig = (obj: any): FormConfig => {
-  return {
-    labelAlign: 'left',
-    fieldWidth: '200px',
-    fields: [],
-    ...obj,
+  constructor(config?: Partial<FormConfig>) {
+    if (config) {
+      Object.assign(this, config);
+    }
   }
 }
 
@@ -29,21 +26,17 @@ export enum FieldType {
   Color = 'color',
 }
 
-export type FieldConfig = {
-  label: string;
-  name: string;
-  type: FieldType;
-  placeholder: string;
-  maxLength: number;
-}
+export class FieldConfig {
+  label: string = "";
+  name: string = "";
+  type: FieldType = FieldType.Text;
+  placeholder: string = "";
+  maxLength: number = 50;
+  autofocus: boolean = false;
 
-export const NewFieldConfig = (obj: any): FieldConfig => {
-  return {
-    label: '',
-    name: '',
-    type: FieldType.Text,
-    placeholder: '',
-    maxLength: 0,
-    ...obj,
+  constructor(config?: Partial<FieldConfig>) {
+    if (config) {
+      Object.assign(this, config);
+    }
   }
 }

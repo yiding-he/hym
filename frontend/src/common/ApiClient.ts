@@ -1,7 +1,6 @@
 import axios, {AxiosResponse} from 'axios';
 import {AppConfig} from "./AppConfig";
-import {User, useUserStore} from "./UserStore";
-import {Store} from 'pinia';
+import {UserStatus, useUserStore} from "./UserStore";
 import {PageResult} from "../components/table/DataTableCore";
 
 const apiClient = axios.create();
@@ -13,18 +12,14 @@ const ApiClient = {
   },
 }
 
-let userStore: Store<"user", User> | null = null;
-
 // 拦截请求路径，添加前缀
 apiClient.interceptors.request.use(
   config => {
     if (config.url?.startsWith("/")) {
       config.url = ApiClient.apiUrl + config.url;
     }
-    if (userStore == null) {
-      userStore = useUserStore();
-    }
-    const token = userStore.token;
+    const token = useUserStore().token;
+    console.log("calling api with token: ", token);
     if (token) {
       config.headers.Authorization = `Bearer ${token}`;
     }
@@ -39,7 +34,7 @@ apiClient.interceptors.request.use(
 // 拦截请求返回值
 apiClient.interceptors.response.use(
   (response: AxiosResponse) => {
-    if (response.data && response.data.success === false) {
+    if (response.data && response.data.ok === false) {
       return Promise.reject(response.data);
     }
     return Promise.resolve(response.data.data);
@@ -154,15 +149,27 @@ export class ApiType<req, resp> {
       options.hooks.filter(exists).map(hook => hook.onStart).filter(exists).forEach(fn => fn?.());
     }
 
+    if (this.method !== "GET" && this.method !== "POST") {
+      throw new Error(`不支持的请求方法：${this.method}`);
+    }
+
     try {
       const data = options.parameters;
       // 这里的 apiClient 是 AxiosInstance 对象
       if (this.method === "GET") {
         return await apiClient.get<req, resp>(this.name, {params: data});
-      } else if (this.method === "POST") {
-        return await apiClient.post<req, resp>(this.name, data);
       } else {
-        throw new Error(`不支持的请求方法：${this.method}`);
+        return await apiClient.post<req, resp>(this.name, data);
+      }
+    } catch (e: any) {
+      if (e.response?.status === 401) {
+        const userStore = useUserStore();
+        userStore.setUserStatus(UserStatus.LOGGED_OUT);
+        userStore.setToken('')
+        return new Promise(() => {
+        })
+      } else {
+        throw e;
       }
     } finally {
       if (options.hooks) {

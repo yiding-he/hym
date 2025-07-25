@@ -3,11 +3,13 @@ package com.hyd.hym.jwtsecurity;
 import com.github.benmanes.caffeine.cache.Cache;
 import com.github.benmanes.caffeine.cache.Caffeine;
 import com.hyd.hym.HymConfig;
+import io.jsonwebtoken.ClaimJwtException;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.JwtParser;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
 import jakarta.annotation.PostConstruct;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -20,6 +22,7 @@ import static java.util.concurrent.TimeUnit.*;
  * 对 JWT 相关功能的封装，一些功能会根据配置文件来配置。
  */
 @Service
+@Slf4j
 public class JwtService {
 
   @Autowired
@@ -42,10 +45,18 @@ public class JwtService {
       .build();
   }
 
+  /**
+   * 解析 JWT 字符串，返回 Claims 对象。如果解析失败，则返回 null，此时需要用户重新登录
+   */
   public Claims parse(String jwt) {
-    return this.claimsCache.get(jwt, __ ->
-      jwtParser.parseSignedClaims(__).getPayload()
-    );
+    try {
+      return this.claimsCache.get(jwt, __ ->
+        jwtParser.parseSignedClaims(__).getPayload()
+      );
+    } catch (ClaimJwtException e) {
+      log.error("JWT 解析失败: {}", e.getMessage());
+      return null;
+    }
   }
 
   public JwtToken generate(String username) {

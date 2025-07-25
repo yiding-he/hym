@@ -1,12 +1,12 @@
 <script setup lang="ts">
-import {inject, nextTick, onMounted, ref} from 'vue';
+import {inject, onMounted, ref} from 'vue';
 import DialogTitle from "../dialog/DialogTitle.vue";
 import Button from "../control/Button.vue";
 import FormWrapper from "../form/FormWrapper.vue";
-import FieldWrapper from "../form/FieldWrapper.vue";
 import {AppConfig, DEFAULT_APP_CONFIG} from "../../common/AppConfig";
 import {ApiList} from "../../common/ApiClient";
 import {UserStatus, useUserStore} from "../../common/UserStore";
+import {FieldConfig, FieldType, FormConfig} from "../form/FormConfig";
 
 const appConfig = inject<AppConfig>('$appConfig', DEFAULT_APP_CONFIG);
 const loginDialog = ref<HTMLDialogElement | null>(null);
@@ -15,11 +15,6 @@ const LoginDialog = {
   open: () => {
     if (loginDialog.value) {
       loginDialog.value.showModal();
-      nextTick(() => {
-        if (usernameTextField.value) {
-          usernameTextField.value.focus();
-        }
-      })
     }
   },
   close: () => {
@@ -29,40 +24,50 @@ const LoginDialog = {
   }
 }
 
-const usernameTextField = ref<InstanceType<typeof HTMLInputElement> | null>(null);
-const username = ref<string>('');
-const password = ref<string>('');
+const loginFormRef = ref<InstanceType<typeof FormWrapper>>();
 const errorMessage = ref<string | null>(null);
 
 const userStore = useUserStore();
 
 onMounted(async () => {
   LoginDialog.open();
-  username.value = "admin";
-  password.value = "admin123";
+  loginFormRef.value?.setQuery({username: "admin", password: "admin123"})
 })
 
 function onLoginButtonClick(event: Event) {
   event.preventDefault();
 
-  if (!username.value || !password.value) {
+  const query = loginFormRef.value?.getQuery()
+  const username = query?.username;
+  const password = query?.password;
+
+  if (!username || !password) {
     errorMessage.value = '用户名和密码不能为空';
     return;
   }
-
   ApiList.Login.call({
-    username: username.value,
-    password: password.value,
+    username: username,
+    password: password,
   }).then(response => {
+    console.log("登录成功，token=", response.token)
     const token = response.token;
     userStore.setToken(token);
     userStore.setUserStatus(UserStatus.LOGGED_IN)
     LoginDialog.close();
   }).catch(error => {
+    console.log("登录失败", error)
     errorMessage.value = error.message;
   })
-
 }
+
+const formConfig = new FormConfig({
+  fieldWidth: "300px",
+  fields: [
+    new FieldConfig({label: "用户名 :", name: "username", type: FieldType.Text, autofocus: true}),
+    new FieldConfig({label: "密码 :", name: "password", type: FieldType.Password})
+  ]
+})
+
 </script>
 
 <template>
@@ -70,13 +75,7 @@ function onLoginButtonClick(event: Event) {
     <DialogTitle>登录{{ appConfig.applicationName }}</DialogTitle>
       <form action="" @submit="onLoginButtonClick">
         <div class="form-body">
-          <FormWrapper>
-            <FieldWrapper label="用户名 :">
-              <input type="text" ref="usernameTextField" name="username" v-model="username"/>
-            </FieldWrapper>
-            <FieldWrapper label="密码 :">
-              <input type="password" name="password" v-model="password"/>
-            </FieldWrapper>
+          <FormWrapper ref="loginFormRef" :config="formConfig">
             <div class="error-message" v-if="errorMessage">{{ errorMessage }}</div>
             <div class="form-buttons">
               <Button>登录</Button>
@@ -90,7 +89,7 @@ function onLoginButtonClick(event: Event) {
 <style scoped>
 .form-body {
   margin: 10px;
-  width: 200px;
+  width: 300px;
 }
 
 .form-buttons {
@@ -100,6 +99,7 @@ function onLoginButtonClick(event: Event) {
 }
 
 .error-message {
+  width: 300px;
   color: red;
   margin-top: 5px;
 }

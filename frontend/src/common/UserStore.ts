@@ -1,8 +1,5 @@
 import {defineStore} from "pinia";
 
-// FIXME: 我尝试了很久都不知道为什么
-//        watch(userStore.userStatus, (newValue) => {}) 不起作用，
-//        只能用 userStore.$subscribe 来实现侦听属性变化。
 export const useUserStore = defineStore('user', {
   state: () => {
     return loadUser({
@@ -10,11 +7,16 @@ export const useUserStore = defineStore('user', {
       token: ''
     } as User);
   }, actions: {
+    onChange() {
+      localStorage.setItem('user', JSON.stringify(this));
+    },
     setUserStatus(status: UserStatus) {
       this.userStatus = status;
+      this.onChange();
     },
     setToken(token: string) {
       this.token = token;
+      this.onChange();
     },
   }
 });
@@ -33,19 +35,11 @@ export type User = {
 
 // Store 初始化时 从 localStorage 加载用户信息
 function loadUser(user: User): User {
+  let finalUser = user;
   const userString = localStorage.getItem('user');
   const localStorageUser = userString ? JSON.parse(userString) : null;
   if (localStorageUser) {
-    user = {...localStorageUser}
+    finalUser = localStorageUser
   }
-  return user
+  return finalUser
 }
-
-// App 初始化时调用这个方法来将 userStore 同步到 localStorage
-export function createUserStoreSyncToLocalStorage() {
-  const userStore = useUserStore();
-  userStore.$subscribe((mutation, state) => {
-    localStorage.setItem('user', JSON.stringify(state));
-  })
-}
-

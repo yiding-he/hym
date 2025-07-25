@@ -1,12 +1,12 @@
 <script setup lang="ts">
 import './style.css'
-import {provide, ref, watch} from 'vue';
-import {apiClient, ApiList} from './common/ApiClient';
+import {provide, ref} from 'vue';
+import {ApiList} from './common/ApiClient';
 import PageLoading from "./components/overlay/PageLoading.vue";
 import AdminPage from "./components/page/AdminPage.vue";
 import LoginPage from "./components/page/LoginPage.vue";
 import {AppConfig} from "./common/AppConfig";
-import {createUserStoreSyncToLocalStorage, UserStatus, useUserStore} from "./common/UserStore";
+import {UserStatus, useUserStore} from "./common/UserStore";
 
 // 定义枚举
 enum AppStatus {
@@ -22,10 +22,8 @@ const appConfig = ref<AppConfig>({applicationName: '某某系统'});
 provide('$appConfig', appConfig);
 
 // userStore 是使用 pinia 框架创建出来的
-createUserStoreSyncToLocalStorage();
-const userStore = useUserStore();
-userStore.$subscribe((mutation, state) => {
-  console.log("User store changed: ", state.userStatus);
+useUserStore().$subscribe((mutation, state) => {
+  console.log("用户状态变化", JSON.stringify(state));
   const newStatus = state.userStatus;
   if (newStatus == UserStatus.LOGGED_IN) {
     appStatus.value = AppStatus.LOGGED_IN;
@@ -38,7 +36,7 @@ userStore.$subscribe((mutation, state) => {
 const loadInitConfig = () => ApiList.InitConfig.call({});
 const onInitSuccess = (response: AppConfig) => {
   appConfig.value = response
-  appStatus.value = userStore.userStatus == UserStatus.LOGGED_IN ? AppStatus.LOGGED_IN : AppStatus.LOGGED_OUT;
+  appStatus.value = useUserStore().userStatus == UserStatus.LOGGED_IN ? AppStatus.LOGGED_IN : AppStatus.LOGGED_OUT;
 };
 const onInitError = (error: any) => {
   console.error('Failed to load init config: ', error);
