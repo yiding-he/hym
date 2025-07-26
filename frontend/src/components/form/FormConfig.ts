@@ -33,6 +33,7 @@ export class FieldConfig {
   placeholder: string = "";
   maxLength: number = 50;
   autofocus: boolean = false;
+  disabled: boolean = false;
 
   constructor(config?: Partial<FieldConfig>) {
     if (config) {

@@ -41,7 +41,8 @@ onMounted(() => {
       <FieldWrapper :config="field" :form="config">
         <input v-if="[FieldType.Text, FieldType.Password, FieldType.Number].includes(field.type)"
                v-model="query[field.name]"
-               :type="field.type" :placeholder="field.placeholder" :maxlength="field.maxLength" :name="field.name">
+               :disabled="field.disabled" :type="field.type" :placeholder="field.placeholder"
+               :maxlength="field.maxLength" :name="field.name">
       </FieldWrapper>
     </template>
     <slot></slot>
