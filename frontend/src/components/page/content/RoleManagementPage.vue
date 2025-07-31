@@ -2,7 +2,8 @@
 import {CrudConfig, TableConfig} from "../../container/CrudConfig";
 import {FieldConfig, FieldType, FormConfig} from "../../form/FormConfig";
 import CrudPane from "../../container/CrudPane.vue";
-import {ApiList} from "../../../common/ApiClient";
+
+import {ApiList} from "../../../common/ApiList";
 
 const formConfig = new FormConfig({
   fieldWidth: '200px',

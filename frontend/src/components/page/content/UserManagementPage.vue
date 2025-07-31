@@ -2,10 +2,11 @@
 import CrudPane from "../../container/CrudPane.vue";
 import {FieldConfig, FieldType, FormConfig} from "../../form/FormConfig";
 import {CrudConfig, OperationsConfig, TableConfig} from "../../container/CrudConfig";
-import {ApiList} from "../../../common/ApiClient";
 import {FormDialogConfig} from "../../dialog/FormDialog";
 import FormDialog from "../../dialog/FormDialog.vue";
 import {ref} from "vue";
+import {ApiList} from "../../../common/ApiList";
+import {CallOptions} from "../../../common/ApiClient";
 
 const formConfig = new FormConfig({
   fieldWidth: '200px',
@@ -25,7 +26,7 @@ const formConfig = new FormConfig({
   ]
 });
 
-const newUserDialogRef = ref<typeof FormDialog>();
+const newUserDialogRef = ref<InstanceType<typeof FormDialog>>();
 
 const operationsConfig = new OperationsConfig({
   operations: [
@@ -76,7 +77,7 @@ const newUserDialogConfig = new FormDialogConfig({
         label: '用户名',
         name: 'userName',
         type: FieldType.Text,
-        maxLength: 20,
+        maxLength: 40,
       }),
       new FieldConfig({
         label: '手机号',
@@ -88,11 +89,15 @@ const newUserDialogConfig = new FormDialogConfig({
         label: '邮箱',
         name: 'email',
         type: FieldType.Text,
-        maxLength: 20,
+        maxLength: 50,
       }),
     ]
   }),
-  onSubmit: (formData) => {
+  onSubmit: (context) => {
+    ApiList.AddUser.callByOptions(CallOptions
+      .of(context.formData)
+      .addElementsDisabledWhenCalling([context.actionButton])
+    )
     newUserDialogRef.value?.close();
   }
 })

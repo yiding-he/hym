@@ -3,13 +3,12 @@ package com.hyd.hym.database;
 import lombok.extern.slf4j.Slf4j;
 
 import java.util.Objects;
-import java.util.stream.Collectors;
 
 @Slf4j
 public class BaseProvider {
 
   @SuppressWarnings("unused")
-  public String toSql(Conditions conditions) {
+  public String toSelectSql(Conditions conditions) {
     var projection = String.join(",", conditions.getProjection());
     if (projection.isEmpty()) {
       projection = "*";

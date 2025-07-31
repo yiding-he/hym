@@ -1,7 +1,5 @@
 import axios, {AxiosResponse} from 'axios';
-import {AppConfig} from "./AppConfig";
 import {UserStatus, useUserStore} from "./UserStore";
-import {PageResult} from "../components/table/DataTableCore";
 
 const apiClient = axios.create();
 const ApiClient = {
@@ -48,16 +46,6 @@ export {ApiClient, apiClient};
 
 //////////////////////////////
 
-type FunctionCategory = {
-  title: string,
-  functions: Function[],
-}
-
-type Function = {
-  title: string,
-  pageName: string,
-}
-
 export type CallHook = {
   onStart?: () => void,
   onFinish?: () => void,
@@ -82,7 +70,7 @@ export class CallOptions {
     return this;
   }
 
-  // 添加 addHook 方法
+  // 添加表单提交事件侦听
   addHook(hook: CallHook): this {
     if (hook) {
       this.hooks.push(hook);
@@ -177,50 +165,5 @@ export class ApiType<req, resp> {
       }
     }
   }
-}
-
-/**
- * 定义所有的接口，每个接口都是一个 ApiType 对象。使用方法：
- *   ApiList.Login.call({
- *     // 这里的参数属性名是可以在 IDE 中提示的
- *     username: "admin", password: "123456"
- *   }).then(response => {
- *     // 处理返回值，返回值的属性名也是可以在 IDE 中提示的
- *     const token = response.token;
- *   }).catch(error => {
- *     // 处理错误
- *   })
- */
-export const ApiList = {
-
-  // 加载站点全局配置
-  InitConfig: new ApiType<
-    {},
-    AppConfig
-  >("/init-config", "GET"),
-
-  // 登录接口
-  Login: new ApiType<
-    { username: string, password: string },
-    { token: string }
-  >("/login", "POST"),
-
-  // 获取功能菜单
-  GetFunctions: new ApiType<
-    {},
-    { functions: FunctionCategory[], }
-  >("/functions", "GET"),
-
-  // 查询用户列表
-  GetUserList: new ApiType<
-    Object,
-    PageResult
-  >("/user/list", "GET"),
-
-  // 查询角色列表
-  GetRoleList: new ApiType<
-    Object,
-    PageResult
-  >("/role/list", "GET"),
 }
 

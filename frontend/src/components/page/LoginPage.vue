@@ -4,10 +4,10 @@ import DialogTitle from "../dialog/DialogTitle.vue";
 import Button from "../control/Button.vue";
 import FormWrapper from "../form/FormWrapper.vue";
 import {AppConfig, DEFAULT_APP_CONFIG} from "../../common/AppConfig";
-import {ApiList} from "../../common/ApiClient";
 import {UserStatus, useUserStore} from "../../common/UserStore";
 import {FieldConfig, FieldType, FormConfig} from "../form/FormConfig";
 import DialogBody from "../dialog/DialogBody.vue";
+import {ApiList} from "../../common/ApiList";
 
 const appConfig = inject<AppConfig>('$appConfig', DEFAULT_APP_CONFIG);
 const loginDialog = ref<HTMLDialogElement | null>(null);

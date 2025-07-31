@@ -12,8 +12,9 @@ const props = defineProps({
 })
 
 const formConfig = props.config?.form;
-const formRef = ref<typeof FormWrapper>();
+const formRef = ref<InstanceType<typeof FormWrapper>>();
 const dialogRef = ref<HTMLDialogElement>();
+const okButtonRef = ref<HTMLButtonElement>();
 
 defineExpose({
   open: () => {
@@ -27,6 +28,12 @@ defineExpose({
 const closeDialog = () => {
   dialogRef.value?.close();
 }
+
+const submitForm = () => {
+  const formData = formRef.value?.getQuery()
+  props.config?.onSubmit?.({formData: formData, actionButton: okButtonRef.value});
+}
+
 </script>
 
 <template>
@@ -38,7 +45,7 @@ const closeDialog = () => {
       </FormWrapper>
     </DialogBody>
     <DialogFooter>
-      <button type="submit" @click.prevent="config.onSubmit">确定</button>
+      <button type="submit" @click.prevent="submitForm" ref="okButtonRef">确定</button>
       <button type="button" @click.prevent="closeDialog">取消</button>
     </DialogFooter>
   </form>

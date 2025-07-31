@@ -18,6 +18,9 @@ public class UserController extends WebApiV1Controller {
   @Autowired
   private HymUserMapper hymUserMapper;
 
+  @Autowired
+  private IdSupplier idSupplier;
+
   @GetMapping("/user/list")
   public Response listUsers(@ModelAttribute Conditions conditions) throws Exception {
     Thread.sleep(1000);
@@ -30,4 +33,18 @@ public class UserController extends WebApiV1Controller {
       .addData("totalPage", page.totalPage());
   }
 
+  public record AddUserParams(String userName, String mobile, String email) {
+
+  }
+
+  @PostMapping("/user/add")
+  public Response addUser(@RequestBody AddUserParams params) {
+    var user = new HymUser();
+    user.setHymUserId(idSupplier.nextId());
+    user.setUserName(params.userName);
+    user.setMobile(params.mobile);
+    user.setEmail(params.email);
+    hymUserMapper.insert(user);
+    return Response.ok();
+  }
 }

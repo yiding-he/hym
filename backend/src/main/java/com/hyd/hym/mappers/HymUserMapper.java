@@ -29,4 +29,12 @@ public interface HymUserMapper extends BaseMapper<HymUser> {
     @Param("lastLoginIp") String lastLoginIp
   );
 
+  @Insert("""
+    INSERT INTO t_hym_user(
+      hym_user_id, user_name, mobile, email
+    ) values (
+      #{hymUserId}, #{userName}, #{mobile}, #{email}
+    )
+    """)
+  void insert(HymUser hymUser);
 }

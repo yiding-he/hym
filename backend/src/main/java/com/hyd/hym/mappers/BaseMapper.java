@@ -12,7 +12,6 @@ import java.util.Optional;
 import java.util.stream.Stream;
 
 public interface BaseMapper<T> {
-  /// ///////////////////////////
 
   @Select("select found_rows()")
   int selectFoundRows();
@@ -56,6 +55,6 @@ public interface BaseMapper<T> {
     return __list(conditions.withTableName(tableName.get())).stream().findFirst().orElse(null);
   }
 
-  @SelectProvider(type = BaseProvider.class, method = "toSql")
+  @SelectProvider(type = BaseProvider.class, method = "toSelectSql")
   List<T> __list(Conditions conditions);
 }

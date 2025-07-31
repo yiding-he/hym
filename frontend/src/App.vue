@@ -1,12 +1,12 @@
 <script setup lang="ts">
 import './style.css'
 import {provide, ref} from 'vue';
-import {ApiList} from './common/ApiClient';
 import PageLoading from "./components/overlay/PageLoading.vue";
 import AdminPage from "./components/page/AdminPage.vue";
 import LoginPage from "./components/page/LoginPage.vue";
 import {AppConfig} from "./common/AppConfig";
 import {UserStatus, useUserStore} from "./common/UserStore";
+import {ApiList} from "./common/ApiList";
 
 // 定义枚举
 enum AppStatus {

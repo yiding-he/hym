@@ -2,7 +2,8 @@
 import NavigationBlock from "../control/NavigationBlock.vue";
 import {ref} from "vue";
 import NavigationItem from "../control/NavigationItem.vue";
-import {ApiList} from "../../common/ApiClient";
+
+import {ApiList} from "../../common/ApiList";
 
 const functions = ref([])
 ApiList.GetFunctions.call({}).then(resp => {
