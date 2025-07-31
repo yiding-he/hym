@@ -1,8 +1,11 @@
 <script setup lang="ts">
 import CrudPane from "../../container/CrudPane.vue";
 import {FieldConfig, FieldType, FormConfig} from "../../form/FormConfig";
-import {CrudConfig, TableConfig} from "../../container/CrudConfig";
+import {CrudConfig, OperationsConfig, TableConfig} from "../../container/CrudConfig";
 import {ApiList} from "../../../common/ApiClient";
+import {FormDialogConfig} from "../../dialog/FormDialog";
+import FormDialog from "../../dialog/FormDialog.vue";
+import {ref} from "vue";
 
 const formConfig = new FormConfig({
   fieldWidth: '200px',
@@ -21,6 +24,22 @@ const formConfig = new FormConfig({
     }),
   ]
 });
+
+const newUserDialogRef = ref<typeof FormDialog>();
+
+const operationsConfig = new OperationsConfig({
+  operations: [
+    {
+      label: '新增用户', func: () => {
+        newUserDialogRef.value?.open();
+      }
+    },
+    {
+      label: '删除', func: () => {
+      }, forRow: true
+    },
+  ]
+})
 
 let tableConfig = new TableConfig({
   headers: [{
@@ -44,12 +63,45 @@ const crudConfig = new CrudConfig({
   form: formConfig,
   table: tableConfig,
   api: ApiList.GetUserList,
+  operations: operationsConfig,
+})
+
+const newUserDialogConfig = new FormDialogConfig({
+  title: '创建用户',
+  form: new FormConfig({
+    fieldWidth: '300px',
+    direction: 'column',
+    fields: [
+      new FieldConfig({
+        label: '用户名',
+        name: 'userName',
+        type: FieldType.Text,
+        maxLength: 20,
+      }),
+      new FieldConfig({
+        label: '手机号',
+        name: 'mobile',
+        type: FieldType.Text,
+        maxLength: 11,
+      }),
+      new FieldConfig({
+        label: '邮箱',
+        name: 'email',
+        type: FieldType.Text,
+        maxLength: 20,
+      }),
+    ]
+  }),
+  onSubmit: (formData) => {
+    newUserDialogRef.value?.close();
+  }
 })
 
 </script>
 
 <template>
   <CrudPane :config="crudConfig"></CrudPane>
+  <FormDialog :config="newUserDialogConfig" ref="newUserDialogRef"></FormDialog>
 </template>
 
 <style scoped>

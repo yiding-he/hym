@@ -50,8 +50,6 @@ dialog {
   outline: unset;
   border: 1px solid var(--main-color);
   border-radius: 4px;
-  display: flex;
-  flex-direction: column;
   padding: 0;
   box-shadow: 2px 2px 2px var(--field-inset-shadow);
 }

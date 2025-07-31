@@ -7,6 +7,7 @@ export class CrudConfig {
   form: FormConfig = new FormConfig();
   table: TableConfig = new TableConfig();
   api?: ApiType<any, any>;
+  operations: OperationsConfig = new OperationsConfig();
 
   constructor(config?: Partial<CrudConfig>) {
     if (config) {
@@ -19,6 +20,22 @@ export class TableConfig {
   headers: Header[] = [];
 
   constructor(config?: Partial<TableConfig>) {
+    if (config) {
+      Object.assign(this, config);
+    }
+  }
+}
+
+export type Operation = {
+  label: string;
+  func?: () => void;
+  forRow?: boolean;
+}
+
+export class OperationsConfig {
+  operations: Operation[] = [];
+
+  constructor(config?: Partial<OperationsConfig>) {
     if (config) {
       Object.assign(this, config);
     }

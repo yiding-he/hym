@@ -64,9 +64,16 @@ onMounted(async () => {
       </FormWrapper>
     </form>
   </TitledPane>
+  <div class="buttons-wrapper">
+    <button v-for="op in config.operations.operations.filter(_op => !_op.forRow)"
+            type="button" @click.prevent="op.func">{{ op.label }}</button>
+  </div>
   <DataTable ref="dataTableRef" :headers="config.table.headers" :data="data" @pageIndexChanged="onPageIndexChanged"></DataTable>
 </template>
 
 <style scoped>
-
+  .buttons-wrapper {
+    display: flex;
+    padding-bottom: 0.5em;
+  }
 </style>

@@ -7,6 +7,7 @@ import {AppConfig, DEFAULT_APP_CONFIG} from "../../common/AppConfig";
 import {ApiList} from "../../common/ApiClient";
 import {UserStatus, useUserStore} from "../../common/UserStore";
 import {FieldConfig, FieldType, FormConfig} from "../form/FormConfig";
+import DialogBody from "../dialog/DialogBody.vue";
 
 const appConfig = inject<AppConfig>('$appConfig', DEFAULT_APP_CONFIG);
 const loginDialog = ref<HTMLDialogElement | null>(null);
@@ -62,6 +63,7 @@ function onLoginButtonClick(event: Event) {
 
 const formConfig = new FormConfig({
   fieldWidth: "300px",
+  direction: 'column',
   fields: [
     new FieldConfig({label: "用户名 :", name: "username", type: FieldType.Text, autofocus: true}),
     new FieldConfig({label: "密码 :", name: "password", type: FieldType.Password})
@@ -73,24 +75,20 @@ const formConfig = new FormConfig({
 <template>
   <dialog ref="loginDialog">
     <DialogTitle>登录{{ appConfig.applicationName }}</DialogTitle>
+    <DialogBody>
       <form action="" @submit="onLoginButtonClick">
-        <div class="form-body">
-          <FormWrapper ref="loginFormRef" :config="formConfig">
-            <div class="error-message" v-if="errorMessage">{{ errorMessage }}</div>
-            <div class="form-buttons">
-              <Button>登录</Button>
-            </div>
-          </FormWrapper>
-        </div>
+        <FormWrapper ref="loginFormRef" :config="formConfig">
+          <div class="error-message" v-if="errorMessage">{{ errorMessage }}</div>
+          <div class="form-buttons">
+            <Button>登录</Button>
+          </div>
+        </FormWrapper>
       </form>
+    </DialogBody>
   </dialog>
 </template>
 
 <style scoped>
-.form-body {
-  margin: 10px;
-  width: 300px;
-}
 
 .form-buttons {
   display: flex;

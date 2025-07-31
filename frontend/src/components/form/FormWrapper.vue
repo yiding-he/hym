@@ -1,10 +1,10 @@
 <script setup lang="ts">
-import {getCurrentInstance, onMounted, PropType, provide, ref} from "vue";
+import {computed, getCurrentInstance, onMounted, PropType, provide, ref} from "vue";
 import {FieldType, FormConfig} from "./FormConfig";
 import FieldWrapper from "./FieldWrapper.vue";
 
 const props = defineProps({
-  config: {type: Object as PropType<FormConfig>, required: true}
+  config: {type: FormConfig, required: true}
 })
 
 provide('labelAlign', props.config?.labelAlign)
@@ -33,10 +33,20 @@ onMounted(() => {
   }
 })
 
+const dynamicStyle = computed(() => {
+  const style: Record<string, string> = {}
+  if (props.config.direction) {
+    style.flexDirection = props.config.direction
+  } else {
+    style.flexDirection = 'row'
+  }
+  return style
+})
+
 </script>
 
 <template>
-  <div class="form-wrapper">
+  <div class="form-wrapper" :style="dynamicStyle">
     <template v-for="field in config.fields">
       <FieldWrapper :config="field" :form="config">
         <input v-if="[FieldType.Text, FieldType.Password, FieldType.Number].includes(field.type)"
@@ -52,7 +62,6 @@ onMounted(() => {
 <style>
   .form-wrapper {
     display: flex;
-    flex-direction: row;
     flex-wrap: wrap;
     column-gap: 10px;
   }

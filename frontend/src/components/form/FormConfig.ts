@@ -1,6 +1,7 @@
 export class FormConfig {
   labelAlign: 'left' | 'center' | 'right' = 'left';
   fieldWidth: string = '200px';
+  direction: 'row' | 'column' = 'row';
   fields: FieldConfig[] = [];
 
   constructor(config?: Partial<FormConfig>) {

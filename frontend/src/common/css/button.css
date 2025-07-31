@@ -8,7 +8,7 @@ button {
   border-radius: 4px;
   cursor: pointer;
   position: relative;
-  top: 0.2em;
+  top: 0.1em;
 }
 
 button:hover {
@@ -24,7 +24,7 @@ button:focus {
 button:active {
   background-color: var(--main-color-light);
   border-color: var(--main-color-light);
-  top: 0.4em;
+  top: 0.3em;
   box-shadow: 0 0 5px var(--main-color-shadow);
 }
 
@@ -33,5 +33,5 @@ button:disabled, button:hover:disabled {
   color: var(--text-color-light);
   box-shadow: none;
   border-color: var(--field-border);
-  top: 0.2em;
+  top: 0.1em;
 }
