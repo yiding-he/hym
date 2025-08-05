@@ -1,5 +1,6 @@
 package com.hyd.hym;
 
+import com.hyd.hybatis.pagination.PageHelperPage;
 import com.hyd.hym.constants.HymError;
 import lombok.Data;
 
@@ -68,6 +69,15 @@ public class Response {
   public Response addData(String key, Object value) {
     data.put(key, value);
     return this;
+  }
+
+  public Response addPage(PageHelperPage<?> page) {
+    return this
+      .addData("rows", page.getList())
+      .addData("total", page.getTotal())
+      .addData("pageSize", page.getPageSize())
+      .addData("pageIndex", page.getPageNum())
+      .addData("totalPage", page.getPages());
   }
 
   @SuppressWarnings("unchecked")

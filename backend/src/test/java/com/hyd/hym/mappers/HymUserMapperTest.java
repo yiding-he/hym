@@ -1,15 +1,9 @@
 package com.hyd.hym.mappers;
 
+import com.hyd.hybatis.Conditions;
 import com.hyd.hym.HymApplicationTest;
-import com.hyd.hym.database.Condition;
-import com.hyd.hym.database.Conditions;
-import com.hyd.hym.database.Operator;
-import com.hyd.hym.database.Page;
-import com.hyd.hym.models.HymUser;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-
-import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -28,12 +22,11 @@ class HymUserMapperTest extends HymApplicationTest {
 
   @Test
   void testList() {
-    var users = hymUserMapper.list(new Conditions()
-      .addCondition(Condition.of(HymUser::getUserName, Operator.like, "%admin%"))
-      .addCondition(Condition.of(HymUser::getHymUserId, Operator.in, List.of(1, 2, 3, 4, 5)))
-      .addCondition(Condition.of("status", Operator.eq, (Integer) null)) // will be ignored
-      .addCondition(Condition.of(HymUser::getStatus, Operator.notnull))
-      .addOrderBy("hym_user_id DESC")
+    var users = hymUserMapper.selectList(new Conditions()
+        .withColumn("user_name").contains("admin")
+        .withColumn("user_id").in(1, 2, 3, 4, 5)
+        .withColumn("status").nonNull()
+        .orderDesc("hym_user_id")
     );
     assertFalse(users.isEmpty());
     users.forEach(System.out::println);
@@ -41,12 +34,11 @@ class HymUserMapperTest extends HymApplicationTest {
 
   @Test
   void testListPage() {
-    Page<HymUser> users = hymUserMapper.listPage(new Conditions()
-      .addCondition(Condition.of(HymUser::getUserName, Operator.like, "%admin%"))
-      .page(0, 10)
+    var users = hymUserMapper.selectPage(
+      new Conditions().withColumn("user_name").contains("admin"), 0, 10
     );
-    assertFalse(users.data().isEmpty());
-    assertEquals(10, users.pageSize());
-    users.data().forEach(System.out::println);
+    assertFalse(users.getList().isEmpty());
+    assertEquals(10, users.getPageSize());
+    users.getList().forEach(System.out::println);
   }
 }

@@ -1,4 +1,5 @@
 package com.hyd.hym.models;
+import com.hyd.hybatis.annotations.HbEntity;
 import lombok.Data;
 import java.time.LocalDateTime;
 
@@ -6,6 +7,7 @@ import java.time.LocalDateTime;
  * 用户表
  */
 @Data
+@HbEntity(table = "t_hym_user")
 public class HymUser {
 
   public static final int STATUS_NORMAL = 1;

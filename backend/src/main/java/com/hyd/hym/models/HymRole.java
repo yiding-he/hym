@@ -1,5 +1,6 @@
 package com.hyd.hym.models;
 
+import com.hyd.hybatis.annotations.HbEntity;
 import lombok.Data;
 import java.time.LocalDateTime;
 
@@ -7,6 +8,7 @@ import java.time.LocalDateTime;
  * 角色表
  */
 @Data
+@HbEntity(table = "t_hym_role")
 public class HymRole {
 
     /**
