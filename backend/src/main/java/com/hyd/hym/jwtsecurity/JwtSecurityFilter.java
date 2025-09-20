@@ -40,9 +40,11 @@ public class JwtSecurityFilter extends OncePerRequestFilter {
           .toException();
       }
     }
+
     void accept() throws IOException, ServletException {
       Context.this.chain.doFilter(req, resp);
     }
+
     void deny() {
       Context.this.resp.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
     }
@@ -58,6 +60,11 @@ public class JwtSecurityFilter extends OncePerRequestFilter {
 
   private void processFilter(Context ctx) throws IOException, ServletException {
     var uri = ctx.req().getRequestURI();
+
+    if (uri.equals("/")) {
+      ctx.resp().sendRedirect("/index.html");
+      return;
+    }
 
     // 如果是静态资源，直接放行
     if (StaticResources.isStaticResourceRequest(uri)) {

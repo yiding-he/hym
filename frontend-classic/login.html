@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Title</title>
+  <link rel="stylesheet" href="css/_index_.css">
+  <script type="module" src="js/_index_.js"></script>
+  <script>
+    window.currentPage = 'login';
+  </script>
+</head>
+<body>
+<dialog id="login-dialog" open>
+  <div class="dialog-title">登录</div>
+  <div class="dialog-body">
+    <form method="dialog">
+      <div class="form-field">
+        <label>
+          <span>Username:</span>
+          <input type="text" name="username" required>
+        </label>
+      </div>
+      <div class="form-field">
+        <label>
+          <span>Password:</span>
+          <input type="password" name="password" required>
+        </label>
+      </div>
+      <div class="form-buttons">
+        <button type="submit">Login</button>
+      </div>
+    </form>
+  </div>
+</dialog>
+</body>
+</html>

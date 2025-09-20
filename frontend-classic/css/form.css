@@ -1,0 +1,11 @@
+form .form-field, form .form-field label {
+  display: flex;
+}
+
+form .form-field {
+  margin-bottom: 1rem;
+}
+
+form .form-field label {
+  flex-direction: column;
+}

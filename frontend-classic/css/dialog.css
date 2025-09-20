@@ -1,0 +1,13 @@
+dialog {
+  margin: auto;
+  padding: 0;
+}
+
+.dialog-title {
+  font-weight: bold;
+  padding: 0.5rem 1rem;
+}
+
+.dialog-body {
+  padding: 1rem;
+}
